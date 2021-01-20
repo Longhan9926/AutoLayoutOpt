@@ -32,26 +32,26 @@ def main(args):
                 rgb = imageio.imread(os.path.join(args.rgb_folder, rgb_pth))
                 if rgb.shape[2] == 4:
                     rgb = rgba2rgb(rgb)
-                origin_shape = rgb.shape[:2]
+                origin_shape = (rgb.shape[1],rgb.shape[0])
                 rgb = np.expand_dims(
                     cv2.resize(rgb.astype(np.uint8), (320, 320), interpolation = cv2.INTER_NEAREST).astype(np.float32) - g_mean, 0)
 
                 feed_dict = {image_batch: rgb}
                 pred_alpha = sess.run(pred_mattes, feed_dict=feed_dict)
-                final_alpha = cv2.resize(np.squeeze(pred_alpha), origin_shape).astype(np.uint8)
+                final_alpha = cv2.resize(np.squeeze(pred_alpha), origin_shape)
                 imageio.imwrite(os.path.join(output_folder, rgb_pth), final_alpha)
 
         else:
-            rgb = misc.imread(args.rgb)
+            rgb = imageio.imread(args.rgb)
             if rgb.shape[2] == 4:
                 rgb = rgba2rgb(rgb)
-            origin_shape = rgb.shape[:2]
+            origin_shape = (rgb.shape[1],rgb.shape[0])
             rgb = np.expand_dims(
                 cv2.resize(rgb.astype(np.uint8), (320, 320), interpolation = cv2.INTER_NEAREST).astype(np.float32) - g_mean, 0)
 
             feed_dict = {image_batch: rgb}
             pred_alpha = sess.run(pred_mattes, feed_dict=feed_dict)
-            final_alpha = cv2.resize(np.squeeze(pred_alpha), origin_shape).astype(np.uint8)
+            final_alpha = cv2.resize(np.squeeze(pred_alpha), origin_shape)
             imageio.imwrite(os.path.join(output_folder, 'alpha.png'), final_alpha)
 
 
