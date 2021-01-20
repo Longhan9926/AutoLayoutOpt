@@ -2,7 +2,6 @@ import tensorflow as tf
 import numpy as np
 import os
 import cv2
-from scipy import misc
 import imageio
 import argparse
 import sys
