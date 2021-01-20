@@ -1,0 +1,6 @@
+*.mdb
+*.ldb
+*.sln
+*.config
+
+venv/
