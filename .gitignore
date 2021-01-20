@@ -4,3 +4,6 @@
 *.config
 
 venv/
+src/salient/salience_model/checkpoint
+src/salient/salience_model/model.ckpt-200.data-00000-of-00001
+src/salient/salience_model/model.ckpt-200.index
