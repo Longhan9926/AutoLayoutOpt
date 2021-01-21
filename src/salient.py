@@ -1,4 +1,6 @@
 import numpy as np
+import sko
+from sko.GA import GA
 
 class SalienceBKG():
     def __init__(self, img):
@@ -11,15 +13,19 @@ class SalienceBKG():
     def IdentifySalience(self):
 
 class CropNScale():
-    def __init__(self, img, aspect = [2,3]): # Aspect = Width,Height
+    def __init__(self, img, resolution = [480,720]): # Aspect = Width,Height
+        """
+
+        :type img: numpy.array
+        """
         self.img = img
-        self.lt = (0,0)
-        self.width = aspect[0]
+        self.lefttop = (0,0)
+        self.width = resolution[0]
 
     def OptimizeSC(self):
 
 
     def SalienceSC(self):
-
+        
 
     def ShowIMG(self):
