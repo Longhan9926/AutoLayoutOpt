@@ -1,2 +1,2 @@
 from .Arrange import arrange
-from .Layers import ComponentLayer, BKG, Title, Design
+from .Layers import ComponentLayer, Background, Title, Patterns, Design
