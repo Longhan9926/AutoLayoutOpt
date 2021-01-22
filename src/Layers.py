@@ -2,7 +2,11 @@ import math
 import cv2
 from PIL import ImageFont, ImageDraw, Image
 from .Plot import InitCanvas
-from .LoadImage import url_to_image, load_image
+from .LoadImage import url_to_image
+import matplotlib
+import matplotlib.pyplot as plt
+from pylab import mpl
+from IPython.core.pylabtools import figsize # import figsize
 
 len_px = 3.7795275591
 
@@ -60,10 +64,10 @@ class Title(ComponentLayer):
         self.font_setting = font_setting
 
     def cal_text_size(self):
-
+        raise NotImplementedError
 
     def generate_pic(self):
-        img = Image.new(mode='RGBA', size=(400, 50))
+        mpl.rcParams['font.sans-serif'] = [self.font_setting['name']]
 
 
 
