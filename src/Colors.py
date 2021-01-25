@@ -46,11 +46,11 @@ def get_color_palette(image):
     return palette
 
 
-def generate_color_palette(n, dominant_color, strategy='Monotone'):
+def generate_color_palette(n_color, dominant_color, strategy='Monotone'):
     """
     Given a dominant color and the number of required colors, return the color palette.
     :param strategy: the strategy to generate the color palette
-    :param n: number of colors in the palette
+    :param n_color: number of colors in the palette
     :param dominant_color: the dominant color of the color palette
     :return: a tuple of color palette
     """
@@ -71,7 +71,7 @@ def generate_color_palette(n, dominant_color, strategy='Monotone'):
             temps = 0
         return temps
 
-    while len(color_palette) < n:
+    while len(color_palette) < n_color:
         choice = np.random.choice(('hue', 'sat', 'val'))
         temp_hue, temp_sat, temp_val = prime_hue, prime_sat, prime_val
         if choice == 'hue':
@@ -98,7 +98,7 @@ def generate_color_palette(n, dominant_color, strategy='Monotone'):
 
 if __name__ == '__main__':
     n = 4
-    palette = generate_color_palette(n, (0.1, 0.5, 0.5), strategy='Complementary')
+    palette = generate_color_palette(n, (0.5, 1, 0.7), strategy='Complementary')
     new_palette = []
     for color in palette:
         temp = (int(color[0]*255),int(color[2]*255),int(color[2]*255))

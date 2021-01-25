@@ -7,22 +7,36 @@ import argparse
 len_px = 3.7795275591
 
 
+class Location:
+    def __init__(self, top=0, bottom=1, left=0, right=1):
+        self.top = top
+        self.bottom = bottom
+        self.left = left
+        self.right = right
+
+    def convert(self,size):
+        self.lft_c = self.lft * size[0]
+        self.rgt_c = self.rgt * size[0]
+        self.btm_c = self.btm * size[1]
+        self.top_c = self.top * size[1]
+
 class Layout:
     def __init__(self):
         self.layout = {}
+        self.pic = Location()
+        self.txt = Location()
+        self.logo = Location()
 
     def load_layout(self, file_path):
         self.layout = {}
         with open(file_path, 'r') as load_f:
             self.layout = json.load(load_f)
 
-
 class Design:
-    def __init__(self, width, height):
+    def __init__(self, size):
         self.design_str = []
-        self.width = math.ceil(width * len_px)
-        self.height = math.ceil(height * len_px)
-        self.canvas = src.InitCanvas(self.width, self.height)
+        self.size = size
+        self.canvas = src.InitCanvas(self.size[0], self.size[1])
         self.color_palette = None
         self.dominant_color = None
 
@@ -41,6 +55,10 @@ class Design:
             temp.load_layer(new_layer)
             self.insert_layer(temp)
 
+    def load_layout(self,layout:Layout):
+        layout.pic.convert(self.size)
+
+
     def get_dominant_color(self):
         image = self.show_image()
         self.dominant_color = src.get_dominant_color(image)
@@ -57,14 +75,15 @@ class Design:
 
 
 def main(args):
-    new_design = Design()
+    new_design = Design(args.size)
 
     # load the text, picture into the layout
     prime_pic = src.load_image(args.prime)
     dominant_color = src.get_dominant_color(prime_pic)
     color_palette = src.generate_color_palette(3, dominant_color, strategy='Monotone')
-
-
+    layout = Layout()
+    layout.load_layout('input/layout.json')
+    new_design.
 
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
