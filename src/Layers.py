@@ -1,12 +1,9 @@
 import math
 import cv2
 from PIL import ImageFont, ImageDraw, Image
-from .Plot import InitCanvas
 from .LoadImage import url_to_image
-import matplotlib
-import matplotlib.pyplot as plt
-from pylab import mpl
-from IPython.core.pylabtools import figsize # import figsize
+import colorsys
+import palettes
 
 len_px = 3.7795275591
 
@@ -62,37 +59,22 @@ class Title(ComponentLayer):
         else:
             self.font = ImageFont.load_default()
         self.font_setting = font_setting
+        self.hue = []
 
     def cal_text_size(self):
         raise NotImplementedError
 
     def generate_pic(self):
-        mpl.rcParams['font.sans-serif'] = [self.font_setting['name']]
 
 
 
 class Patterns(ComponentLayer):
     def __init__(self):
         super().__init__()
+        self.color_palette = []
 
     def generate_pic(self):
         pic = url_to_image(self.layer['src'])
         pic = cv2.resize(pic, (self.width, self.height), interpolation=cv2.INTER_NEAREST)
+
         return pic
-
-
-class Design:
-    def __init__(self, width, height):
-        self.design_str = []
-        self.width = math.ceil(width * len_px)
-        self.height = math.ceil(height * len_px)
-        self.canvas = InitCanvas(self.width, self.height)
-
-    def insert_layer(self, new_layer):
-        self.design_str.append(new_layer)
-
-    def show_image(self):
-        for layer in self.design_str:
-            pic = layer.generate_pic()
-            self.canvas[layer.top:layer.top + layer.height, layer.left:layer.left + layer.width, :] = pic
-        return self.canvas
