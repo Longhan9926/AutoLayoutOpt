@@ -40,8 +40,8 @@ class Layout:
             self.layout = json.load(load_f)
         for ele in self.layout:
             if ele["type"] == "pic":
-                self.pic = Location(ele["position"]["top"],ele["position"]["bottom"],\
-                                    ele["position"]["left"],ele["position"]["right"])
+                self.pic = Location(ele["position"]["top"], ele["position"]["bottom"], \
+                                    ele["position"]["left"], ele["position"]["right"])
 
 
 class Design:
@@ -52,7 +52,7 @@ class Design:
         self.mask = np.zeros(self.size)
         self.color_palette = None
 
-    def insert_layer(self, new_layer, ind = -1):
+    def insert_layer(self, new_layer, ind=-1):
         self.design_str.insert(ind, new_layer)
 
     def load_pic(self, pic):
@@ -76,6 +76,8 @@ class Design:
                 layout.pic.convert(self.size)
                 layer.style["top"] = layout.pic.top_c
                 layer.style["left"] = layout.pic.lft_c
+                layer.style["width"] = layout.pic.rgt_c - layout.pic.lft_c
+                layer.style["height"] = layout.pic.btm_c - layout.pic.top_c
             elif layer.type == "title":
                 layout.txt.convert(self.size)
                 layer.style["top"] = layout.txt.top_c
@@ -95,12 +97,6 @@ class Design:
                 choice = np.random.choice(range(len(color_palette)))
                 layer.hue = color_palette[choice]
 
-    def set_bkg(self, color):
-        rec = src.LoadImage.url_to_image(urls["rectangle"][0])
-        rec = cv2.resize(rec, (self.size[0],self.size[1]), interpolation=cv2.INTER_NEAREST)
-        bkg = src.Layers.Picture(rec)
-        self.design_str.insert(0, bkg)
-
     def show_image(self):
         for layer in self.design_str:
             self.canvas[layer.style['top']:layer.style['top'] + layer.style['height'], \
@@ -113,7 +109,7 @@ class Design:
         for layer in self.design_str:
             temp.append(layer.layer)
         with open('design.json', 'w', encoding='utf-8') as f:
-            json.dump(temp, f, ensure_ascii=False, indent=4)
+            f.write(json.dumps(temp).replace('\"','\\"'))#json.dump(temp, f, ensure_ascii=False, indent=4)
 
 
 def main(args):
@@ -129,25 +125,6 @@ def main(args):
     prime_layer = src.Picture(prime_pic)
     title = src.Title()
     new_design.insert_layer(bkg)
-    new_design.insert_layer(prime_layer)
-    new_design.insert_layer(title)
-    new_design.load_layout(layout)
-    new_design.implement_palette(color_palette)
-    new_design.save_design()
-
-
-def main_in(size, prime, text):
-    new_design = Design(size)
-
-    # load the text, picture into the layout
-    prime_pic = src.load_image(prime)
-    dominant_color = src.get_dominant_color(prime)
-    color_palette = src.generate_color_palette(3, dominant_color, strategy='Monotone')
-    layout = Layout()
-    layout.load_layout('input/layout.json')
-    new_design.set_bkg(color_palette)
-    prime_layer = src.Picture(prime_pic)
-    title = src.Title(text)
     new_design.insert_layer(prime_layer)
     new_design.insert_layer(title)
     new_design.load_layout(layout)
@@ -173,4 +150,26 @@ def parse_arguments(argv):
 
 if __name__ == '__main__':
     # main(parse_arguments(sys.argv[1:]))
-    main_in([400, 400], 'input/img/free_stock_photo.jpg', 'Hello')
+    size = [400, 400]
+    prime = 'input/img/free_stock_photo.jpg'
+    text = 'Hello'
+
+    new_design = Design(size)
+
+    # load the text, picture into the layout
+    prime_pic = src.load_image(prime)
+    dominant_color = src.get_dominant_color(prime)
+    dominant_color = (dominant_color[0] / 255, dominant_color[1] / 255, dominant_color[2] / 255)
+    color_palette = src.generate_color_palette(3, dominant_color, strategy='Monotone')
+    layout = Layout()
+    layout.load_layout('input/layout.json')
+    prime_url = src.upload_image(prime)
+    prime_layer = src.Picture(prime_url)
+    bkg = src.Decoration()
+    title = src.Title(text)
+    new_design.insert_layer(bkg)
+    new_design.insert_layer(prime_layer)
+    new_design.insert_layer(title)
+    new_design.load_layout(layout)
+    new_design.implement_palette(color_palette)
+    new_design.save_design()

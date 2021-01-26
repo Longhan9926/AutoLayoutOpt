@@ -71,15 +71,10 @@ class ComponentLayer:
 
 
 class Picture(ComponentLayer):
-    def __init__(self, img):
+    def __init__(self, url):
         super().__init__()
         self.type = 'pic'
-
-
-class Picture(ComponentLayer):
-    def __init__(self, img):
-        super().__init__()
-        self.type = 'pic'
+        self.layer["src"] = url
 
 
 class Decoration(ComponentLayer):

@@ -19,5 +19,5 @@ def upload_image(local_file):
     # 生成上传 Token，可以指定过期时间等
     token = q.upload_token(bucket_name, key, 3600)
     put_file(token, key, local_file)
-    return 'yun.baoxiaohe.com/' + key
+    return '//yun.baoxiaohe.com/' + key
 
