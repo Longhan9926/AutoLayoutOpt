@@ -85,10 +85,9 @@ class Design:
     def implement_palette(self, color_palette):
         self.color_palette = color_palette
         for layer in self.design_str:
-            if layer.type == 'dec':
-                choice = np.random.choice(range(len(color_palette)))
-                layer.hue = color_palette[choice]
-            elif layer.type == 'title':
+            if layer.type not in ["dec", "title"]:
+                continue
+            else:
                 choice = np.random.choice(range(len(color_palette)))
                 layer.hue = color_palette[choice]
 
@@ -105,6 +104,9 @@ class Design:
             temp.append(layer.layer)
         with open('design.json', 'w', encoding='utf-8') as f:
             f.write(json.dumps(temp).replace('\"', '\\"'))
+
+    def upload_design(self):
+        raise NotImplementedError
 
 
 def main(args):

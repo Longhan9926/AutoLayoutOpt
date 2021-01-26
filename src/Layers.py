@@ -82,6 +82,7 @@ class Decoration(ComponentLayer):
         super().__init__()
         self.type = 'dec'
         self.layer["src"] = urls[pattern]
+        # self.style["fill"] =
 
 
 class Title(ComponentLayer):
@@ -89,7 +90,7 @@ class Title(ComponentLayer):
         super().__init__()
         if font_setting is None:
             font_setting = {"fontWeight": "normal", "fontStyle": "normal",\
-                            "color": "#FFFFFFFF"}
+                            "color": "#FFFFFFFF", "fontSize": 90}
         self.layer["value"] = text
         self.type = 'title'
         self.layer["type"] = "font"
@@ -101,6 +102,8 @@ class Title(ComponentLayer):
             self.font = ImageFont.load_default()
         self.font_setting = font_setting
         self.hue = []
+        self.style["fontWeight"] = font_setting["fontWeight"]
+        self.style["fontSize"] = font_setting["fontSize"]
 
     def cal_text_size(self):
         raise NotImplementedError
