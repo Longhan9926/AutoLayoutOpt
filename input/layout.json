@@ -18,6 +18,24 @@
     }
   },
   {
+    "type": "title",
+    "position": {
+      "left": 55.0,
+      "right": 90.0,
+      "top": 30.0,
+      "bottom": 50.0
+    }
+  },
+  {
+    "type": "dec",
+    "position": {
+      "left": 55.0,
+      "right": 90.0,
+      "top": 30.0,
+      "bottom": 50.0
+    }
+  },
+  {
     "type": "logo",
     "position": {
       "left": 75.0,

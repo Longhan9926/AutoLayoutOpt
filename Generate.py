@@ -41,18 +41,13 @@ class Location:
 class Layout:
     def __init__(self):
         self.layout = {}
-        self.pic = Location()
-        self.txt = Location()
-        self.logo = Location()
 
     def load_layout(self, file_path):
-        self.layout = {}
         with open(file_path, 'r') as load_f:
-            self.layout = json.load(load_f)
-        for ele in self.layout:
-            if ele["type"] == "pic":
-                self.pic = Location(ele["position"]["top"], ele["position"]["bottom"], \
-                                    ele["position"]["left"], ele["position"]["right"])
+            temp = json.load(load_f)
+        for ele in temp:
+            self.layout[ele["type"]] = Location(ele["position"]["top"],ele["position"]["bottom"],\
+                                                ele["position"]["left"],ele["position"]["right"])
 
 
 class Design:
@@ -83,20 +78,9 @@ class Design:
 
     def load_layout(self, layout: Layout):
         for layer in self.design_str:
-            if layer.type == "pic":
-                layout.pic.convert(self.size)
-                layer.style["top"] = layout.pic.top_c
-                layer.style["left"] = layout.pic.lft_c
-                layer.style["width"] = layout.pic.rgt_c - layout.pic.lft_c
-                layer.style["height"] = layout.pic.btm_c - layout.pic.top_c
-            elif layer.type == "title":
-                layout.txt.convert(self.size)
-                layer.style["top"] = layout.txt.top_c
-                layer.style["left"] = layout.txt.lft_c
-            elif layer.type == "logo":
-                layout.logo.convert(self.size)
-                layer.style["top"] = layout.logo.top_c
-                layer.style["left"] = layout.logo.lft_c
+            layout.layout[layer.type].define_size(self.size)
+            for key in ["top", "left", "width", "height"]:
+                layer.style[key] = layout.layout[layer.type].position["resolute"][key]
 
     def implement_palette(self, color_palette):
         self.color_palette = color_palette
