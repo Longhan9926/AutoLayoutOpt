@@ -14,17 +14,28 @@ urls = json.load(open_file)
 
 
 class Location:
-    def __init__(self, top=0, bottom=1, left=0, right=1):
-        self.top = top
-        self.btm = bottom
-        self.lft = left
-        self.rgt = right
+    def __init__(self, top=0, btm=100, lft=0, rgt=100, size = [100,100]):
+        self.position = {
+            "absolute": {"top": 0, "height": 0, "left": 0, "width": 0},
+            "resolute": {"top": 0, "height": 0, "left": 0, "width": 0},
+            "percentage": {"top": top, "btm": btm, "lft": lft, "rgt": rgt}
+        }
+        self.define_size(size)
 
-    def convert(self, size):
-        self.lft_c = self.lft * size[0] // 100
-        self.rgt_c = self.rgt * size[0] // 100
-        self.btm_c = self.btm * size[1] // 100
-        self.top_c = self.top * size[1] // 100
+    def define_size(self, size):
+        """
+        :param size:in real length
+        """
+        self.position["absolute"]["top"] = self.position["percentage"]["top"] * size[1]
+        self.position["absolute"]["left"] = self.position["percentage"]["lft"] * size[0]
+        self.position["absolute"]["height"] = self.position["percentage"]["btm"] * size[1] \
+                                              - self.position["percentage"]["top"] * size[1]
+        self.position["absolute"]["width"] = self.position["percentage"]["rgt"] * size[0] \
+                                             - self.position["percentage"]["lft"] * size[0]
+        self.position["resolute"]["top"] = math.floor(self.position["absolute"]["top"] * len_px)
+        self.position["resolute"]["left"] = math.floor(self.position["absolute"]["left"] * len_px)
+        self.position["resolute"]["height"] = math.floor(self.position["absolute"]["height"] * len_px)
+        self.position["resolute"]["width"] = math.floor(self.position["absolute"]["width"] * len_px)
 
 
 class Layout:
@@ -109,7 +120,7 @@ class Design:
         for layer in self.design_str:
             temp.append(layer.layer)
         with open('design.json', 'w', encoding='utf-8') as f:
-            f.write(json.dumps(temp).replace('\"','\\"'))#json.dump(temp, f, ensure_ascii=False, indent=4)
+            f.write(json.dumps(temp).replace('\"', '\\"'))
 
 
 def main(args):
