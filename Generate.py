@@ -26,12 +26,12 @@ class Location:
         """
         :param size:in real length
         """
-        self.position["absolute"]["top"] = self.position["percentage"]["top"] * size[1]
-        self.position["absolute"]["left"] = self.position["percentage"]["lft"] * size[0]
-        self.position["absolute"]["height"] = self.position["percentage"]["btm"] * size[1] \
-                                              - self.position["percentage"]["top"] * size[1]
-        self.position["absolute"]["width"] = self.position["percentage"]["rgt"] * size[0] \
-                                             - self.position["percentage"]["lft"] * size[0]
+        self.position["absolute"]["top"] = self.position["percentage"]["top"] * size[1] / 100
+        self.position["absolute"]["left"] = self.position["percentage"]["lft"] * size[0] / 100
+        self.position["absolute"]["height"] = self.position["percentage"]["btm"] * size[1] / 100 \
+                                              - self.position["percentage"]["top"] * size[1] / 100
+        self.position["absolute"]["width"] = self.position["percentage"]["rgt"] * size[0] / 100 \
+                                             - self.position["percentage"]["lft"] * size[0] / 100
         self.position["resolute"]["top"] = math.floor(self.position["absolute"]["top"] * len_px)
         self.position["resolute"]["left"] = math.floor(self.position["absolute"]["left"] * len_px)
         self.position["resolute"]["height"] = math.floor(self.position["absolute"]["height"] * len_px)
@@ -80,7 +80,7 @@ class Design:
         for layer in self.design_str:
             layout.layout[layer.type].define_size(self.size)
             for key in ["top", "left", "width", "height"]:
-                layer.style[key] = layout.layout[layer.type].position["resolute"][key]
+                layer.style[key] = layout.layout[layer.type].position["absolute"][key]
 
     def implement_palette(self, color_palette):
         self.color_palette = color_palette

@@ -87,6 +87,9 @@ class Decoration(ComponentLayer):
 class Title(ComponentLayer):
     def __init__(self, text: str, font_setting=None, font_path=None):
         super().__init__()
+        if font_setting is None:
+            font_setting = {"fontWeight": "normal", "fontStyle": "normal",\
+                            "color": "#FFFFFFFF"}
         self.layer["value"] = text
         self.type = 'title'
         self.layer["type"] = "font"
