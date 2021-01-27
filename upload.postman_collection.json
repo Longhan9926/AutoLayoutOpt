@@ -1,0 +1,61 @@
+{
+  "info": {
+    "_postman_id": "1889c5bf-8de7-4371-b077-03d163f07917",
+    "name": "New Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "New Request",
+      "response": [],
+      "requests": {
+        "auth": {
+          "type": "apikey",
+          "apikey": {
+            "in": "header",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0NzA3NiwidHlwZSI6InVzZXIiLCJpc19hZG1pbiI6MCwiaWF0IjoxNjExNTM5MDMyLCJleHAiOjE2MTIxNDM4MzJ9.JDO7ZUSBwLhi19icpcJzNTJbjqfNULkclq5zKTrFrOY",
+            "key": "authentication"
+          }
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": [
+            "[{\\\"type\\\": \\\"img\\\", \\\"src\\\": \\\"//yun.baoxiaohe.com/ai/my-python-logo.jpg\\\", \\\"style\\\": {\\\"top\\\": 20.0, \\\"left\\\": 20.0, \\\"width\\\": 180.0, \\\"height\\\": 360.0}}, {\\\"type\\\": \\\"font\\\", \\\"src\\\": \\\"//cdn.baoxiaohe.com/5225a97f-55e0-495f-a65e-ad2ad498e7a3.otf\\\", \\\"style\\\": {\\\"top\\\": 120.0, \\\"left\\\": 220.0, \\\"width\\\": 140.0, \\\"height\\\": 80.0, \\\"fontWeight\\\": \\\"normal\\\", \\\"fontSize\\\": 90}, \\\"value\\\": \\\"Hello\\\", \\\"thumb\\\": \\\"//cdn.baoxiaohe.com/font/min/9aadf3b4-ee9f-4481-ad08-4eb25c29b39d.min.ttf\\\"}, {\\\"type\\\": \\\"img\\\", \\\"src\\\": [\\\"http://cdn.baoxiaohe.com/4b157157-4aeb-4227-aa7d-cd49049e8fc8.svg\\\"], \\\"style\\\": {\\\"top\\\": 40.0, \\\"left\\\": 160.0, \\\"width\\\": 160.0, \\\"height\\\": 80.0}}]"
+          ],
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "https://www.baoxiaohe.com/api/v2/projects"
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": {}
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

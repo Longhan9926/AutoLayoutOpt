@@ -3,6 +3,7 @@ import cv2
 import json
 from PIL import ImageFont, ImageDraw, Image
 from .LoadImage import url_to_image
+from .RandomG import random_name
 
 len_px = 3.7795275591
 open_file = open("input/basic_material.json")
@@ -21,6 +22,8 @@ class ComponentLayer:
         self.layer = {"type": "img", "src": None, "style": {"top": 0, "left": 0, "width": 0, "height": 0}}
         self.style = self.layer["style"]
         self.type = 'basic'
+        self.layer["can_set_color"] = 1
+        self.layer["uuid"] = random_name(1)
 
     @property
     def location(self):
@@ -74,28 +77,38 @@ class Picture(ComponentLayer):
     def __init__(self, url):
         super().__init__()
         self.type = 'pic'
+        self.url = url
         self.layer["src"] = url
+
+    def crop_scale(self, size):
+        """
+        :param size: in resolutions [width, height]
+        update layer src
+        """
+        origin = url_to_image(self.url)
+        origin_size = origin.shape
+
 
 
 class Decoration(ComponentLayer):
     def __init__(self, pattern='rectangle'):
         super().__init__()
         self.type = 'dec'
-        self.layer["src"] = urls[pattern]
-        # self.style["fill"] =
+        self.layer["src"] = urls[pattern][0]
+        self.layer["fills"] = [{"color" : "rgba(0, 0, 0, 1)", "type" : "globalFill"}]
 
 
 class Title(ComponentLayer):
     def __init__(self, text: str, font_setting=None, font_path=None):
         super().__init__()
         if font_setting is None:
-            font_setting = {"fontWeight": "normal", "fontStyle": "normal",\
-                            "color": "#FFFFFFFF", "fontSize": 90}
+            font_setting = {"fontWeight": "normal", "fontStyle": "normal",
+                            "color": "#FFFFFFFF", "fontSize": 90, "color_f": None}
         self.layer["value"] = text
         self.type = 'title'
         self.layer["type"] = "font"
-        self.layer["src"] = "//cdn.baoxiaohe.com/5225a97f-55e0-495f-a65e-ad2ad498e7a3.otf"
-        self.layer["thumb"] = "//cdn.baoxiaohe.com/font/min/9aadf3b4-ee9f-4481-ad08-4eb25c29b39d.min.ttf"
+        self.layer["src"] = "https://cdn.baoxiaohe.com/5225a97f-55e0-495f-a65e-ad2ad498e7a3.otf"
+        # self.layer["thumb"] = "https://cdn.baoxiaohe.com/font/min/9aadf3b4-ee9f-4481-ad08-4eb25c29b39d.min.ttf"
         if font_path:
             self.font = ImageFont.load(font_path)
         else:
@@ -104,9 +117,31 @@ class Title(ComponentLayer):
         self.hue = []
         self.style["fontWeight"] = font_setting["fontWeight"]
         self.style["fontSize"] = font_setting["fontSize"]
+        self.style["lineHeight"] = 40
+        self.set_color(font_setting["color_f"])
 
     def cal_text_size(self):
         raise NotImplementedError
+
+    def set_color(self, color=None):
+        """
+        :param color: in rgba/rgb
+        :return: dict of "colorFilter"
+        """
+        colorFilter = {}
+        if color is None:
+            # Set to default color
+            colorFilter["hsv"] = {"h": 43.30645161290333, "s": 0, "v": 0, "a": 1}
+            colorFilter["rgba"] = {"r": 0, "g": 0, "b": 0, "a": 1}
+        else:
+            colorFilter["rgba"] = {"r": color[0], "g": color[1], "b": color[2]}
+            if len(color) == 3:
+                colorFilter["rgba"]["a"] = 1
+            elif len(color) == 4:
+                colorFilter["rgba"]["a"] = color[3]
+        self.style["fillFilter"] = colorFilter
+        self.style["color"] = "rgba({0},{1},{2},{3})".format(str(colorFilter["rgba"]["r"]), str(colorFilter["rgba"]["g"]),
+                                                          str(colorFilter["rgba"]["b"]), str(colorFilter["rgba"]["a"]))
 
 
 class Slogan(ComponentLayer):

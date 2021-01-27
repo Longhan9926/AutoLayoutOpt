@@ -1,5 +1,5 @@
 from typing import List
-
+# from postpy2.core import PostPython
 import src
 import sys
 import math
@@ -14,24 +14,25 @@ urls = json.load(open_file)
 
 
 class Location:
-    def __init__(self, top=0, btm=100, lft=0, rgt=100, size = [100,100]):
+    def __init__(self, top=0, btm=100, lft=0, rgt=100, size=[100, 100]):
         self.position = {
             "absolute": {"top": 0, "height": 0, "left": 0, "width": 0},
             "resolute": {"top": 0, "height": 0, "left": 0, "width": 0},
             "percentage": {"top": top, "btm": btm, "lft": lft, "rgt": rgt}
         }
-        self.define_size(size)
+        self.define_size(size, [0, 0])
 
-    def define_size(self, size):
+    def define_size(self, size, loc):
         """
-        :param size:in real length
+        :param size:in real length [mm] [width, height]
         """
-        self.position["absolute"]["top"] = self.position["percentage"]["top"] * size[1] / 100
-        self.position["absolute"]["left"] = self.position["percentage"]["lft"] * size[0] / 100
+        self.position["absolute"]["top"] = self.position["percentage"]["top"] * size[1] / 100 + loc[1]
+        self.position["absolute"]["left"] = self.position["percentage"]["lft"] * size[0] / 100 + loc[0]
         self.position["absolute"]["height"] = self.position["percentage"]["btm"] * size[1] / 100 \
                                               - self.position["percentage"]["top"] * size[1] / 100
         self.position["absolute"]["width"] = self.position["percentage"]["rgt"] * size[0] / 100 \
                                              - self.position["percentage"]["lft"] * size[0] / 100
+        # The following part is problematic
         self.position["resolute"]["top"] = math.floor(self.position["absolute"]["top"] * len_px)
         self.position["resolute"]["left"] = math.floor(self.position["absolute"]["left"] * len_px)
         self.position["resolute"]["height"] = math.floor(self.position["absolute"]["height"] * len_px)
@@ -46,14 +47,20 @@ class Layout:
         with open(file_path, 'r') as load_f:
             temp = json.load(load_f)
         for ele in temp:
-            self.layout[ele["type"]] = Location(ele["position"]["top"],ele["position"]["bottom"],\
-                                                ele["position"]["left"],ele["position"]["right"])
+            self.layout[ele["type"]] = Location(ele["position"]["top"], ele["position"]["bottom"], \
+                                                ele["position"]["left"], ele["position"]["right"])
 
 
 class Design:
-    def __init__(self, size):
+    def __init__(self, size, loc):
+        """
+        The class of a 2d model design
+        :param size: in absolute size [mm] [width, height]
+        """
         self.design_str: List[src.Layers.ComponentLayer] = []
-        self.size = size
+        self.loc = loc
+        self.size_a = size
+        self.size = [math.floor(len_px * x) for x in size]
         self.canvas = src.InitCanvas(self.size[0], self.size[1])
         self.mask = np.zeros(self.size)
         self.color_palette = None
@@ -78,7 +85,7 @@ class Design:
 
     def load_layout(self, layout: Layout):
         for layer in self.design_str:
-            layout.layout[layer.type].define_size(self.size)
+            layout.layout[layer.type].define_size(self.size_a, self.loc)
             for key in ["top", "left", "width", "height"]:
                 layer.style[key] = layout.layout[layer.type].position["absolute"][key]
 
@@ -105,8 +112,20 @@ class Design:
         with open('design.json', 'w', encoding='utf-8') as f:
             f.write(json.dumps(temp).replace('\"', '\\"'))
 
+    """
     def upload_design(self):
-        raise NotImplementedError
+        with open('design.json') as f:
+            design = f.readlines()
+        with open('upload.postman_collection.json', 'r') as f:
+            collection = json.load(f)
+            #collection["item"][0]["requests"] = collection["item"][0].pop("request")
+            collection["item"][0]["requests"]["body"]["raw"] = design
+        with open('upload.postman_collection.json', 'w') as f:
+            json.dump(collection, f, indent=2)
+        runner = PostPython('upload.postman_collection.json')
+        response = runner.RequestMethods.put_request()
+        print(response.status_code())
+    """
 
 
 def main(args):
@@ -147,11 +166,12 @@ def parse_arguments(argv):
 
 if __name__ == '__main__':
     # main(parse_arguments(sys.argv[1:]))
-    size = [400, 400]
+    size = [434, 361]  # [width, height] [mm]
+    loc = [50, 108]  # [left, top] [mm]
     prime = 'input/img/free_stock_photo.jpg'
     text = 'Hello'
 
-    new_design = Design(size)
+    new_design = Design(size, loc)
 
     # load the text, picture into the layout
     prime_pic = src.load_image(prime)
@@ -170,3 +190,4 @@ if __name__ == '__main__':
     new_design.load_layout(layout)
     new_design.implement_palette(color_palette)
     new_design.save_design()
+    # new_design.upload_design()

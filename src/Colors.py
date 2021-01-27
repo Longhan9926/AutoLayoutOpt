@@ -11,6 +11,21 @@ N = 6
 HSV_tuples = [(x * 1.0 / N, 0.5, 0.5) for x in range(N)]
 RGB_tuples = map(lambda x: colorsys.hsv_to_rgb(*x), HSV_tuples)
 
+
+def distance_in_color_space(palette, color):
+    """
+    Calculate the distance between color and a palette in color space [hsv]
+    :param palette: List of colors
+    :param color: tuple of hsv
+    :return: List of distance
+    """
+    Distance = []
+    for c in palette:
+        temp = [(c[x] - color[x]) * (c[x] - color[x]) for x in range(3)]
+        Distance.append(sum(temp))
+    return Distance
+
+
 """
 def get_dominant_color(image):
     image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
@@ -49,6 +64,7 @@ def get_dominant_color(image):
     dominant_color = Haishoku.getDominant(image)
     return dominant_color
 
+
 def get_color_palette(image):
     palette = Haishoku.getPalette(image)
     return palette
@@ -81,7 +97,11 @@ def generate_color_palette(n_color, dominant_color, strategy='Monotone'):
 
     while len(color_palette) < n_color:
         choice = np.random.choice(('hue', 'sat', 'val'))
+        if len(color_palette) == 1:
+            choice = 'hue'
         temp_hue, temp_sat, temp_val = prime_hue, prime_sat, prime_val
+        prime_sat_com = prime_sat ** 0.65
+        prime_val_com = prime_val ** 0.65
         if choice == 'hue':
             if strategy == 'Monotone':
                 temp_hue = np.random.normal(loc=prime_hue, scale=0.08, size=None)
@@ -92,22 +112,49 @@ def generate_color_palette(n_color, dominant_color, strategy='Monotone'):
                     choice = 0.5
                 temp_hue = prime_hue + choice
                 temp_hue = temp_hue - math.floor(temp_hue)
-            temp_sat = random_sat(prime_sat, 0.3)
-            temp_val = random_sat(prime_val, 0.3)
+            elif strategy == 'contrast':
+                choice = np.random.choice((0, 1 / 3, -1 / 3))
+                if len(color_palette) == 1:
+                    choice = np.random.choice((1 / 3, -1 / 3))
+                temp_hue = prime_hue + choice
+                temp_hue = temp_hue - math.floor(temp_hue)
+            elif strategy == 'similar':
+                choice = np.random.choice((0, 1 / 20, -1 / 20))
+                if len(color_palette) == 1:
+                    choice = np.random.choice((1 / 20, -1 / 20))
+                temp_hue = prime_hue + choice
+                temp_hue = temp_hue - math.floor(temp_hue)
+            elif strategy == 'angle':
+                choice = np.random.choice((0, 1 / 4, -1 / 4))
+                if len(color_palette) == 1:
+                    choice = np.random.choice((1 / 4, -1 / 4))
+                temp_hue = prime_hue + choice
+                temp_hue = temp_hue - math.floor(temp_hue)
+            temp_sat = random_sat(prime_sat_com, 0.3)
+            temp_val = random_sat(prime_val_com, 0.3)
         elif choice == 'sat':
-            temp_sat = random_sat(prime_sat, 0.3)
-            temp_val = random_sat(prime_val, 0.2)
+            temp_sat = random_sat(prime_sat_com, 0.3)
+            temp_val = random_sat(prime_val_com, 0.2)
         elif choice == 'val':
-            temp_sat = random_sat(prime_sat, 0.3)
-            temp_val = random_sat(prime_val, 0.2)
-        color_palette.append(colorsys.hsv_to_rgb(temp_hue, temp_sat, temp_val))
+            temp_sat = random_sat(prime_sat_com, 0.3)
+            temp_val = random_sat(prime_val_com, 0.2)
+        curr = colorsys.hsv_to_rgb(temp_hue, temp_sat, temp_val)
+        if max(distance_in_color_space(color_palette, curr)) < 0.02:
+            continue
+        if temp_val < 0.1 or temp_val > 0.95:
+            continue
+        if temp_sat < 0.1 or temp_sat > 0.98:
+            continue
+        color_palette.append(curr)
         # May need to drop some colors with high value
     return color_palette
 
 
 if __name__ == '__main__':
-    n = 3
-    palette = generate_color_palette(n, (0, 0.2, 0.8))  # , strategy='Complementary')
+    n = 5
+    dominant_color = get_dominant_color('../input/img/free_stock_photo.jpg')
+    dominant_color = (dominant_color[0] / 255, dominant_color[1] / 255, dominant_color[2] / 255)
+    palette = generate_color_palette(n, dominant_color, strategy='angle')
     new_palette = []
     for color in palette:
         temp = (int(color[0] * 255), int(color[1] * 255), int(color[2] * 255))
