@@ -8,6 +8,7 @@ from sko.GA import GA
 
 g_mean = np.array(([126.88, 120.24, 112.19])).reshape([1, 1, 3])
 salience_bar = 0.6
+len_px = 3.7795275591
 
 
 def label_salient_region(image):
@@ -37,32 +38,49 @@ def label_salient_region(image):
     return mask
 
 
-def cal_salient_score(mask_cropped):
-    width = mask_cropped.shape[1]
-    height = mask_cropped.shape[0]
-    sum_importance = sum(mask_cropped)
-    area = width * height
-    importance_percentage = sum_importance / area
-    edge_importance = sum(mask_cropped[0])+sum(mask_cropped[-1])
-    salient_score = sum_importance/math.exp(abs(importance_percentage-salience_bar))
-    return salient_score
+def crop_salient(file_path, target_size):
+    image = imageio.imread(file_path)
+    mask = label_salient_region(image)
 
+    def cal_salient_score(p):
+        """
+        :param p: parameter, include position of the left-top corner and scaling coefficient
+        :return: the evaluation score of the salient crop
+        """
+        top, left, scale = p
 
-def crop_n_scale(origin_size, target_size, mask):
-    """
-    crop the original picture into the target shape
-    :param target_size: [width, height]
-    :return: image
-    """
-    num_points = 50
+        raise NotImplementedError
+        width = mask_cropped.shape[1]
+        height = mask_cropped.shape[0]
+        sum_importance = sum(mask_cropped)
+        area = width * height
+        importance_percentage = sum_importance / area
+        edge_importance = sum(mask_cropped[0]) + sum(mask_cropped[-1])
+        salient_score = sum_importance / math.exp(abs(importance_percentage - salience_bar))
+        return salient_score
 
-    points_coordinate = np.random.rand(num_points, 2)  # generate coordinate of points
-    ga_tsp = GA(func=cal_salient_score(), n_dim=2, size_pop=num_points, max_iter=800, lb=[0, -1], ub=[1, 1], precision=1e-7)
-    best_points, best_distance = ga_tsp.run()
+    def crop_n_scale(origin_size, target_size):
+        """
+        crop the original picture into the target shape
+        :param origin_size: [width, height] in resolution, need to convert to real length
+        :param target_size: [width, height] in resolution, need to convert to real length
+        :return: image
+        """
+        hor = origin_size[0] / len_px
+        ver = origin_size[1] / len_px
+        constraint_eq = [
+            lambda x: (x[2] - x[0]) * target_size[1] - (x[3] - x[1]) * target_size[0]
+        ]
+        num_points = 500
+
+        ga_tsp = GA(func=cal_salient_score(), n_dim=4, size_pop=num_points, max_iter=800, \
+                    lb=[0, 0, 0, 0], ub=[hor, ver, hor, ver], constraint_eq=constraint_eq, precision=1e-2)
+        best_hor, best_ver = ga_tsp.run()
+        return [best_hor, best_ver]
+
+    best_hor, best_ver = crop_n_scale(mask.shape, target_size)
 
 
 if __name__ == '__main__':
     file_path = '../input/img/free_stock_photo.jpg'
-    image = imageio.imread(file_path)
-    mask = label_salient_region(image)
-
+    crop_salient(file_path, [400, 400])
