@@ -1,9 +1,14 @@
 import math
 import cv2
 import json
+import numpy as np
+import imageio
 from PIL import ImageFont, ImageDraw, Image
 from .LoadImage import url_to_image
 from .RandomG import random_name
+from .Salient import crop_salient
+from .UploadImage import upload_image
+import skimage
 
 len_px = 3.7795275591
 open_file = open("input/basic_material.json")
@@ -86,8 +91,12 @@ class Picture(ComponentLayer):
         update layer src
         """
         origin = url_to_image(self.url)
-        origin_size = origin.shape
-
+        #origin = skimage.img_as_float(origin)
+        #origin = np.uint8(origin)
+        image = crop_salient(origin,size)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        imageio.imwrite('cropped.png', image)
+        self.layer["src"] = upload_image('cropped.png')
 
 
 class Decoration(ComponentLayer):

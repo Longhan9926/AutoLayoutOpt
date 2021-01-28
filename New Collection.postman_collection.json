@@ -1,0 +1,83 @@
+{
+	"info": {
+		"_postman_id": "1889c5bf-8de7-4371-b077-03d163f07917",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "New Request",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0NzA3NiwidHlwZSI6InVzZXIiLCJpc19hZG1pbiI6MCwiaWF0IjoxNjExNTM5MDMyLCJleHAiOjE2MTIxNDM4MzJ9.JDO7ZUSBwLhi19icpcJzNTJbjqfNULkclq5zKTrFrOY",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "authentication",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"project_id\": 200227,\n    \"project_name\": \"未命名的设计\",\n    \"background\": null,\n    \"background_filter\": null,\n    \"background_cmyk\": null,\n    \"cate_id\": 2,\n    \"color_hostory\": \"[]\",\n    \"design_data\": \"[{\\\"type\\\":\\\"img\\\",\\\"src\\\":\\\"//cdn.baoxiaohe.com/ace86d52-c6b3-459b-be06-3c3a7193d0cc.png\\\",\\\"uuid\\\":\\\"d79ba568-6b68-4244-a246-23f648f9e4c1\\\",\\\"can_set_color\\\":0,\\\"style\\\":{\\\"position\\\":\\\"absolute\\\",\\\"top\\\":277.2276742366254,\\\"left\\\":683.7792385522583,\\\"transform\\\":0,\\\"rotate\\\":0,\\\"opacity\\\":100,\\\"width\\\":432.9977378793896,\\\"height\\\":113.61623115451059},\\\"sort\\\":1,\\\"locked\\\":false}]\",\n    \"face_background\": \"{}\",\n    \"inside_design_data\": \"[]\",\n    \"inside_face_background\": \"{}\",\n    \"inside_background\": null,\n    \"inside_background_filter\": null,\n    \"inside_background_cmyk\": null,\n    \"membrane_id\": null,\n    \"line_guides\": \"[]\",\n    \"isAuto\": 0,\n    \"rotate\": 0,\n    \"editType\": \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://www.baoxiaohe.com/api/v2/projects",
+					"protocol": "https",
+					"host": [
+						"www",
+						"baoxiaohe",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"projects"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

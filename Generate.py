@@ -1,5 +1,4 @@
 from typing import List
-# from postpy2.core import PostPython
 import src
 import sys
 import math
@@ -68,9 +67,6 @@ class Design:
     def insert_layer(self, new_layer, ind=-1):
         self.design_str.insert(ind, new_layer)
 
-    def load_pic(self, pic):
-        raise NotImplementedError
-
     def load_text(self, text=str):
         raise NotImplementedError
 
@@ -88,6 +84,8 @@ class Design:
             layout.layout[layer.type].define_size(self.size_a, self.loc)
             for key in ["top", "left", "width", "height"]:
                 layer.style[key] = layout.layout[layer.type].position["absolute"][key]
+            if layer.type == 'pic':
+                layer.crop_scale([math.floor(layer.style["width"]*len_px),math.floor(layer.style["height"]*len_px)])
 
     def implement_palette(self, color_palette):
         self.color_palette = color_palette
@@ -110,22 +108,15 @@ class Design:
         for layer in self.design_str:
             temp.append(layer.layer)
         with open('design.json', 'w', encoding='utf-8') as f:
-            f.write(json.dumps(temp).replace('\"', '\\"'))
+            f.write(json.dumps(temp))#.replace('\"', '\\"'))
 
-    """
     def upload_design(self):
-        with open('design.json') as f:
-            design = f.readlines()
-        with open('upload.postman_collection.json', 'r') as f:
+        with open('design.json', 'r') as load_f:
+            design = json.load(load_f)
+        with open('upload_raw.json', 'r') as f:
             collection = json.load(f)
-            #collection["item"][0]["requests"] = collection["item"][0].pop("request")
-            collection["item"][0]["requests"]["body"]["raw"] = design
-        with open('upload.postman_collection.json', 'w') as f:
-            json.dump(collection, f, indent=2)
-        runner = PostPython('upload.postman_collection.json')
-        response = runner.RequestMethods.put_request()
-        print(response.status_code())
-    """
+            collection["design_data"] = json.dumps(design)
+        src.http_put(collection)
 
 
 def main(args):
@@ -174,7 +165,6 @@ if __name__ == '__main__':
     new_design = Design(size, loc)
 
     # load the text, picture into the layout
-    prime_pic = src.load_image(prime)
     dominant_color = src.get_dominant_color(prime)
     dominant_color = (dominant_color[0] / 255, dominant_color[1] / 255, dominant_color[2] / 255)
     color_palette = src.generate_color_palette(3, dominant_color, strategy='Monotone')
@@ -190,4 +180,4 @@ if __name__ == '__main__':
     new_design.load_layout(layout)
     new_design.implement_palette(color_palette)
     new_design.save_design()
-    # new_design.upload_design()
+    new_design.upload_design()

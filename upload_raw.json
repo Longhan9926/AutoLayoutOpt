@@ -1,0 +1,21 @@
+{
+    "project_id": 200227,
+    "project_name": "未命名的设计",
+    "background": null,
+    "background_filter": null,
+    "background_cmyk": null,
+    "cate_id": 2,
+    "color_hostory": "[]",
+    "design_data": "[{\"type\": \"img\", \"src\": \"//yun.baoxiaohe.com/ai/sosescmnnhysmjkfzJ1bwgnsegpdtwcemegu.png\", \"style\": {\"top\": 126.05, \"left\": 71.7, \"width\": 195.3, \"height\": 324.9}, \"can_set_color\": 1, \"uuid\": \"KFGPXY2I0CZlTR66VJVFF9GS4SMLVKQYE743\"}, {\"type\": \"font\", \"src\": \"https://cdn.baoxiaohe.com/5225a97f-55e0-495f-a65e-ad2ad498e7a3.otf\", \"style\": {\"top\": 216.3, \"left\": 288.7, \"width\": 151.90000000000003, \"height\": 72.2, \"fontWeight\": \"normal\", \"fontSize\": 90, \"lineHeight\": 40, \"fillFilter\": {\"hsv\": {\"h\": 43.30645161290333, \"s\": 0, \"v\": 0, \"a\": 1}, \"rgba\": {\"r\": 0, \"g\": 0, \"b\": 0, \"a\": 1}}, \"color\": \"rgba(0,0,0,1)\"}, \"can_set_color\": 1, \"uuid\": \"g6lw551pjpmHpc91qed2ry6stxgqsN2hun7o\", \"value\": \"Hello\"}, {\"type\": \"img\", \"src\": \"//cdn.baoxiaohe.com/4b157157-4aeb-4227-aa7d-cd49049e8fc8.svg\", \"style\": {\"top\": 324.6, \"left\": 288.7, \"width\": 151.90000000000003, \"height\": 72.20000000000002}, \"can_set_color\": 1, \"uuid\": \"wTtmszitd8imLnvOzwrOjnfui7IcgigbIpcC\", \"fills\": [{\"color\": \"rgba(0, 0, 0, 1)\", \"type\": \"globalFill\"}]}]",
+    "face_background": "{}",
+    "inside_design_data": "[]",
+    "inside_face_background": "{}",
+    "inside_background": null,
+    "inside_background_filter": null,
+    "inside_background_cmyk": null,
+    "membrane_id": null,
+    "line_guides": "[]",
+    "isAuto": 0,
+    "rotate": 0,
+    "editType": ""
+}
