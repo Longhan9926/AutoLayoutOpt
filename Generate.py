@@ -44,8 +44,9 @@ class Layout:
 
     def load_layout(self, file_path):
         with open(file_path, 'r') as load_f:
-            temp = json.load(load_f)
-        for ele in temp:
+            layouts = json.load(load_f)
+        temp = np.random.choice(layouts)
+        for key, ele in temp.items():
             self.layout[ele["type"]] = Location(ele["position"]["top"], ele["position"]["bottom"], \
                                                 ele["position"]["left"], ele["position"]["right"])
 
@@ -86,6 +87,25 @@ class Design:
                 layer.style[key] = layout.layout[layer.type].position["absolute"][key]
             if layer.type == 'pic':
                 layer.crop_scale([math.floor(layer.style["width"]*len_px),math.floor(layer.style["height"]*len_px)])
+            if layer.type == 'logo':
+                layer.style.pop("height")
+            if layer.type == 'txt' or layer.type == 'title':
+                layer.style.pop("height")
+                #layer.style.pop("width")
+
+    def load_layout_b(self, layout):
+        for layer in self.design_str:
+            layout[layer.type].define_size(self.size_a, self.loc)
+            for key in ["top", "left", "width", "height"]:
+                layer.style[key] = layout[layer.type].position["absolute"][key]
+            if layer.type == 'pic':
+                layer.crop_scale([math.floor(layer.style["width"]*len_px),math.floor(layer.style["height"]*len_px)])
+            if layer.type == 'logo':
+            #     layer.style.pop("height")
+                layer.style["height"] = layer.style["width"] / layer.shape_origin
+            if layer.type == 'txt' or layer.type == 'title':
+                layer.style.pop("height")
+                #layer.style.pop("width")
 
     def implement_palette(self, color_palette):
         self.color_palette = color_palette
@@ -94,14 +114,7 @@ class Design:
                 continue
             else:
                 choice = np.random.choice(range(len(color_palette)))
-                layer.hue = color_palette[choice]
-
-    def show_image(self):
-        for layer in self.design_str:
-            self.canvas[layer.style['top']:layer.style['top'] + layer.style['height'], \
-            layer.style['left']:layer.style['left'] + layer.style['width']] \
-                = layer.generate_pic()
-        return self.canvas
+                layer.set_color(color_palette[choice])
 
     def save_design(self):
         temp = []
@@ -127,7 +140,7 @@ def main(args):
     dominant_color = src.get_dominant_color(args.prime)
     color_palette = src.generate_color_palette(3, dominant_color, strategy='Monotone')
     layout = Layout()
-    layout.load_layout("input/layout.json")
+    layout.load_layout("input/layoutF.json")
     bkg = src.Decoration()
     prime_layer = src.Picture(prime_pic)
     title = src.Title()
@@ -157,19 +170,20 @@ def parse_arguments(argv):
 
 if __name__ == '__main__':
     # main(parse_arguments(sys.argv[1:]))
-    size = [434, 361]  # [width, height] [mm]
-    loc = [50, 108]  # [left, top] [mm]
+    size = [430, 360]  # [width, height] [mm]
+    loc = [45.5, 105.5]  # [left, top] [mm]
     prime = 'input/img/free_stock_photo.jpg'
     text = 'Hello'
+    logo = None
 
     new_design = Design(size, loc)
 
     # load the text, picture into the layout
     dominant_color = src.get_dominant_color(prime)
     dominant_color = (dominant_color[0] / 255, dominant_color[1] / 255, dominant_color[2] / 255)
-    color_palette = src.generate_color_palette(3, dominant_color, strategy='Monotone')
+    color_palette = src.generate_color_palette(2, dominant_color, strategy='Monotone')
     layout = Layout()
-    layout.load_layout('input/layout.json')
+    layout.load_layout('input/layoutF.json')
     prime_url = src.upload_image(prime)
     prime_layer = src.Picture(prime_url)
     bkg = src.Decoration()
@@ -177,6 +191,10 @@ if __name__ == '__main__':
     new_design.insert_layer(bkg)
     new_design.insert_layer(prime_layer)
     new_design.insert_layer(title)
+    if logo is not None:
+        new_design.insert_layer(src.Logo(logo))
+    else:
+        new_design.insert_layer(src.Logo())
     new_design.load_layout(layout)
     new_design.implement_palette(color_palette)
     new_design.save_design()

@@ -4,13 +4,14 @@ import json
 import numpy as np
 import imageio
 from PIL import ImageFont, ImageDraw, Image
-from .LoadImage import url_to_image
+from .LoadImage import url_to_image, url_to_svg
 from .RandomG import random_name
 from .Salient import crop_salient
 from .UploadImage import upload_image
 import skimage
 
 len_px = 3.7795275591
+len_pt = 0.3528
 open_file = open("input/basic_material.json")
 urls = json.load(open_file)
 
@@ -91,9 +92,9 @@ class Picture(ComponentLayer):
         update layer src
         """
         origin = url_to_image(self.url)
-        #origin = skimage.img_as_float(origin)
-        #origin = np.uint8(origin)
-        image = crop_salient(origin,size)
+        # origin = skimage.img_as_float(origin)
+        # origin = np.uint8(origin)
+        image = crop_salient(origin, size)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         imageio.imwrite('cropped.png', image)
         self.layer["src"] = upload_image('cropped.png')
@@ -104,7 +105,17 @@ class Decoration(ComponentLayer):
         super().__init__()
         self.type = 'dec'
         self.layer["src"] = urls[pattern][0]
-        self.layer["fills"] = [{"color" : "rgba(0, 0, 0, 1)", "type" : "globalFill"}]
+        self.layer["fills"] = [{"color": "rgba(0, 0, 0, 1)", "type": "globalFill"}]
+
+    def set_color(self, color):
+        color = [round(x*255) for x in color]
+        if len(color) == 3:
+            a = 1
+        else:
+            a = color[3]
+        self.layer["fills"] = [{"color": "rgba({0},{1},{2},{3})".format(str(color[0]), str(color[1]), \
+                                                                        str(color[2]), str(a)),
+                                "type": "globalFill"}]
 
 
 class Title(ComponentLayer):
@@ -112,7 +123,7 @@ class Title(ComponentLayer):
         super().__init__()
         if font_setting is None:
             font_setting = {"fontWeight": "normal", "fontStyle": "normal",
-                            "color": "#FFFFFFFF", "fontSize": 90, "color_f": None}
+                            "color": "#FFFFFFFF", "fontSize":60, "color_f": None}
         self.layer["value"] = text
         self.type = 'title'
         self.layer["type"] = "font"
@@ -122,11 +133,11 @@ class Title(ComponentLayer):
             self.font = ImageFont.load(font_path)
         else:
             self.font = ImageFont.load_default()
-        self.font_setting = font_setting
         self.hue = []
-        self.style["fontWeight"] = font_setting["fontWeight"]
-        self.style["fontSize"] = font_setting["fontSize"]
-        self.style["lineHeight"] = 40
+        if font_setting:
+            self.style["fontWeight"] = font_setting["fontWeight"]
+            self.style["fontSize"] = font_setting["fontSize"]
+        self.style["lineHeight"] = 35
         self.set_color(font_setting["color_f"])
 
     def cal_text_size(self):
@@ -143,38 +154,76 @@ class Title(ComponentLayer):
             colorFilter["hsv"] = {"h": 43.30645161290333, "s": 0, "v": 0, "a": 1}
             colorFilter["rgba"] = {"r": 0, "g": 0, "b": 0, "a": 1}
         else:
+            color = [round(x * 255) for x in color]
             colorFilter["rgba"] = {"r": color[0], "g": color[1], "b": color[2]}
             if len(color) == 3:
                 colorFilter["rgba"]["a"] = 1
             elif len(color) == 4:
                 colorFilter["rgba"]["a"] = color[3]
         self.style["fillFilter"] = colorFilter
-        self.style["color"] = "rgba({0},{1},{2},{3})".format(str(colorFilter["rgba"]["r"]), str(colorFilter["rgba"]["g"]),
-                                                          str(colorFilter["rgba"]["b"]), str(colorFilter["rgba"]["a"]))
+        self.style["color"] = "rgba({0},{1},{2},{3})".format(str(colorFilter["rgba"]["r"]),
+                                                             str(colorFilter["rgba"]["g"]),
+                                                             str(colorFilter["rgba"]["b"]),
+                                                             str(colorFilter["rgba"]["a"]))
 
 
 class Slogan(ComponentLayer):
-    def __init__(self, text: str, font_setting, font_path=None):
+    def __init__(self, text: str, font_setting=None, font_path=None):
         super().__init__()
-        self.text = text
+        if font_setting is None:
+            font_setting = {"fontWeight": "normal", "fontStyle": "normal",
+                            "color": "#FFFFFFFF", "fontSize": 30, "color_f": None}
+        self.layer["value"] = text
         self.type = 'slogan'
+        self.layer["type"] = "font"
+        self.layer["src"] = "https://cdn.baoxiaohe.com/5225a97f-55e0-495f-a65e-ad2ad498e7a3.otf"
+        # self.layer["thumb"] = "https://cdn.baoxiaohe.com/font/min/9aadf3b4-ee9f-4481-ad08-4eb25c29b39d.min.ttf"
         if font_path:
             self.font = ImageFont.load(font_path)
         else:
             self.font = ImageFont.load_default()
-        self.font_setting = font_setting
         self.hue = []
+        if font_setting:
+            self.style["fontWeight"] = font_setting["fontWeight"]
+            self.style["fontSize"] = font_setting["fontSize"]
+        self.style["lineHeight"] = 15
+        self.set_color(font_setting["color_f"])
+
+    def cal_text_size(self):
+        raise NotImplementedError
+
+    def set_color(self, color=None):
+        """
+        :param color: in rgba/rgb
+        :return: dict of "colorFilter"
+        """
+        colorFilter = {}
+        if color is None:
+            # Set to default color
+            colorFilter["hsv"] = {"h": 43.30645161290333, "s": 0, "v": 0, "a": 1}
+            colorFilter["rgba"] = {"r": 0, "g": 0, "b": 0, "a": 1}
+        else:
+            color = [round(x * 255) for x in color]
+            colorFilter["rgba"] = {"r": color[0], "g": color[1], "b": color[2]}
+            if len(color) == 3:
+                colorFilter["rgba"]["a"] = 1
+            elif len(color) == 4:
+                colorFilter["rgba"]["a"] = color[3]
+        self.style["fillFilter"] = colorFilter
+        self.style["color"] = "rgba({0},{1},{2},{3})".format(str(colorFilter["rgba"]["r"]),
+                                                             str(colorFilter["rgba"]["g"]),
+                                                             str(colorFilter["rgba"]["b"]),
+                                                             str(colorFilter["rgba"]["a"]))
 
 
 class Logo(ComponentLayer):
-    def __init__(self):
+    def __init__(self, url=None):
         super().__init__()
         self.type = 'logo'
-
-    def generate_pic(self):
-        pic = url_to_image(self.layer['src'])
-        pic = cv2.resize(pic, (self.width, self.height), interpolation=cv2.INTER_NEAREST)
-        raise NotImplementedError
-
-    def save_layer(self):
-        self.layer["type"] = "img"
+        self.layer["type"] = 'img'
+        if url is not None:
+            self.layer["src"] = url
+        else:
+            self.layer["src"] = "//cdn.baoxiaohe.com/73328f73-91d8-4470-bac7-e69ca56eaa1c.svg"
+        image = url_to_svg(self.layer["src"])
+        self.shape_origin = image.shape[1]/image.shape[0]

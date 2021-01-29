@@ -70,7 +70,7 @@ def get_color_palette(image):
     return palette
 
 
-def generate_color_palette(n_color, dominant_color, strategy='Monotone'):
+def generate_color_palette(n_color, dominant_color, strategy=None):
     """
     Given a dominant color and the number of required colors, return the color palette.
     :param strategy: the strategy to generate the color palette
@@ -78,6 +78,9 @@ def generate_color_palette(n_color, dominant_color, strategy='Monotone'):
     :param dominant_color: the dominant color of the color palette
     :return: a tuple of color palette
     """
+    strategies = ["Monotone", 'Complementary', 'angle', 'similar', 'contrast']
+    if strategy is None:
+        strategy = np.random.choice(strategies)
     seed = random.randint(0, 999)
     np.random.seed(seed)
     color_palette = [dominant_color]
