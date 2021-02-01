@@ -1,4 +1,4 @@
-from .Layers import ComponentLayer, Picture, Title, Logo, Decoration, Slogan
+from .Layers import ComponentLayer, Picture, Title, Logo, Decoration, Slogan, Text
 from .Colors import get_dominant_color, get_color_palette, generate_color_palette
 from .LoadImage import load_image, url_to_image, url_to_svg
 from .Plot import InitCanvas

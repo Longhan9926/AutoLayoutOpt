@@ -19,23 +19,29 @@ class Location:
             "resolute": {"top": 0, "height": 0, "left": 0, "width": 0},
             "percentage": {"top": top, "btm": btm, "lft": lft, "rgt": rgt}
         }
-        self.define_size(size, [0, 0])
+        self.define_size(size, [0, 0], 0)
+        self.font_set = {}
 
-    def define_size(self, size, loc):
+    def define_size(self, size, loc, safe):
         """
         :param size:in real length [mm] [width, height]
         """
-        self.position["absolute"]["top"] = self.position["percentage"]["top"] * size[1] / 100 + loc[1]
-        self.position["absolute"]["left"] = self.position["percentage"]["lft"] * size[0] / 100 + loc[0]
-        self.position["absolute"]["height"] = self.position["percentage"]["btm"] * size[1] / 100 \
-                                              - self.position["percentage"]["top"] * size[1] / 100
-        self.position["absolute"]["width"] = self.position["percentage"]["rgt"] * size[0] / 100 \
-                                             - self.position["percentage"]["lft"] * size[0] / 100
+        self.position["absolute"]["top"] = self.position["percentage"]["top"] * (size[1] - safe * 2) / 100 + loc[
+            1] + safe
+        self.position["absolute"]["left"] = self.position["percentage"]["lft"] * (size[0] - safe * 2) / 100 + loc[
+            0] + safe
+        self.position["absolute"]["height"] = self.position["percentage"]["btm"] * (size[1] - safe * 2) / 100 \
+                                              - self.position["percentage"]["top"] * (size[1] - safe * 2) / 100
+        self.position["absolute"]["width"] = self.position["percentage"]["rgt"] * (size[0] - safe * 2) / 100 \
+                                             - self.position["percentage"]["lft"] * (size[0] - safe * 2) / 100
         # The following part is problematic
         self.position["resolute"]["top"] = math.floor(self.position["absolute"]["top"] * len_px)
         self.position["resolute"]["left"] = math.floor(self.position["absolute"]["left"] * len_px)
         self.position["resolute"]["height"] = math.floor(self.position["absolute"]["height"] * len_px)
         self.position["resolute"]["width"] = math.floor(self.position["absolute"]["width"] * len_px)
+
+    def font_setting(self, setting):
+        self.font_set = setting
 
 
 class Layout:
@@ -61,7 +67,7 @@ class Design:
         self.loc = loc
         self.size_a = size
         self.size = [math.floor(len_px * x) for x in size]
-        self.canvas = src.InitCanvas(self.size[0], self.size[1])
+        # self.canvas = src.InitCanvas(self.size[0], self.size[1])
         self.mask = np.zeros(self.size)
         self.color_palette = None
 
@@ -86,32 +92,40 @@ class Design:
             for key in ["top", "left", "width", "height"]:
                 layer.style[key] = layout.layout[layer.type].position["absolute"][key]
             if layer.type == 'pic':
-                layer.crop_scale([math.floor(layer.style["width"]*len_px),math.floor(layer.style["height"]*len_px)])
+                layer.crop_scale(
+                    [math.floor(layer.style["width"] * len_px), math.floor(layer.style["height"] * len_px)])
             if layer.type == 'logo':
                 layer.style.pop("height")
             if layer.type == 'txt' or layer.type == 'title':
                 layer.style.pop("height")
-                #layer.style.pop("width")
+                # layer.style.pop("width")
 
-    def load_layout_b(self, layout):
+    def load_layout_b(self, layout, safe_distance, face_size, face_loc):
         for layer in self.design_str:
-            layout[layer.type].define_size(self.size_a, self.loc)
+            layout[layer.type].define_size(face_size, face_loc, safe_distance)
             for key in ["top", "left", "width", "height"]:
                 layer.style[key] = layout[layer.type].position["absolute"][key]
             if layer.type == 'pic':
-                layer.crop_scale([math.floor(layer.style["width"]*len_px),math.floor(layer.style["height"]*len_px)])
+                layer.crop_scale(
+                    [math.floor(layer.style["width"] * len_px), math.floor(layer.style["height"] * len_px)])
             if layer.type == 'logo':
-            #     layer.style.pop("height")
-                layer.style["height"] = layer.style["width"] / layer.shape_origin
-            if layer.type == 'txt' or layer.type == 'title':
-                layer.style.pop("height")
-                #layer.style.pop("width")
+                height = layer.style["width"] / layer.shape_origin
+                if layer.style["top"] / face_size[1] > 0.5:
+                    layer.style["top"] = layer.style["top"] - height + layer.style["height"]
+                    layer.style["height"] = height
+                else:
+                    layer.style["height"] = height
+            if layer.type in ["title", "slogan", "txt"]:
+                layer.set_font(layout[layer.type].font_set)
+                layer.cal_text_size()
 
     def implement_palette(self, color_palette):
         self.color_palette = color_palette
         for layer in self.design_str:
             if layer.type not in ["dec", "title"]:
                 continue
+            elif layer.hue:
+                layer.set_color(layer.hue)
             else:
                 choice = np.random.choice(range(len(color_palette)))
                 layer.set_color(color_palette[choice])
@@ -121,7 +135,7 @@ class Design:
         for layer in self.design_str:
             temp.append(layer.layer)
         with open('design.json', 'w', encoding='utf-8') as f:
-            f.write(json.dumps(temp))#.replace('\"', '\\"'))
+            f.write(json.dumps(temp))  # .replace('\"', '\\"'))
 
     def upload_design(self):
         with open('design.json', 'r') as load_f:

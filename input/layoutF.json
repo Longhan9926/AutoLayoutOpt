@@ -3,10 +3,15 @@
     "txt" : {
       "type" : "txt",
       "position" : {
-        "bottom" : 40,
-        "top" : 10,
+        "bottom" : 80,
+        "top" : 70,
         "left" : 55,
         "right" : 95
+      },
+      "FontSetting":{
+        "textAlign": "left",
+        "fontWeight": "normal",
+        "fontStyle": "normal"
       }
     },
     "pic" : {
@@ -25,6 +30,12 @@
         "top" : 30,
         "left" : 55,
         "right" : 95
+      },
+      "FontSetting":{
+        "textAlign": "left",
+        "fontSize": 63.92,
+        "fontWeight": "normal",
+        "fontStyle": "normal"
       }
     },
     "slogan" : {
@@ -34,6 +45,12 @@
         "top" : 50,
         "left" : 55,
         "right" : 95
+      },
+      "FontSetting":{
+        "textAlign": "left",
+        "fontSize": 63.92,
+        "fontWeight": "normal",
+        "fontStyle": "normal"
       }
     },
     "dec" : {
@@ -48,7 +65,7 @@
     "logo" : {
       "type" : "logo",
       "position" : {
-        "bottom" : 85,
+        "bottom" : 95,
         "top" : 90,
         "left" : 80,
         "right" : 95
@@ -59,10 +76,15 @@
     "txt" : {
       "type" : "txt",
       "position" : {
-        "bottom" : 40,
-        "top" : 10,
-        "left" : 55,
-        "right" : 90
+        "bottom" : 37,
+        "top" : 32,
+        "left" :5 ,
+        "right" : 95
+      },
+      "FontSetting":{
+        "textAlign": "left",
+        "fontWeight": "normal",
+        "fontStyle": "normal"
       }
     },
 
@@ -78,19 +100,31 @@
     "title" : {
       "type" : "title",
       "position" : {
-        "bottom" : 30,
-        "top" : 10,
+        "bottom" : 25,
+        "top" : 6,
         "left" : 5,
-        "right" : 60
+        "right" : 45
+      },
+      "FontSetting":{
+        "textAlign": "left",
+        "fontSize": 63.92,
+        "fontWeight": "normal",
+        "fontStyle": "normal"
       }
     },
     "slogan" : {
       "type" : "slogan",
       "position" : {
-        "bottom" : 45,
-        "top" : 30,
+        "bottom" : 32,
+        "top" : 24,
         "left" : 5,
-        "right" : 60
+        "right" : 80
+      },
+      "FontSetting":{
+        "textAlign": "left",
+        "fontSize": 63.92,
+        "fontWeight": "normal",
+        "fontStyle": "normal"
       }
     },
     "type" : {
@@ -109,6 +143,152 @@
         "top" : 5,
         "left" : 85,
         "right" : 95
+      }
+    }
+  },
+  {
+    "txt" : {
+      "type" : "txt",
+      "position" : {
+        "bottom" : 90,
+        "top" : 80,
+        "left" : 12,
+        "right" : 38
+      },
+      "FontSetting":{
+        "textAlign": "center",
+        "fontWeight": "normal",
+        "fontStyle": "normal"
+      }
+    },
+    "pic" : {
+      "type" : "pic",
+      "position" : {
+        "bottom" : 90,
+        "top" : 10,
+        "left" : 50,
+        "right" : 95
+      }
+    },
+    "title" : {
+      "type" : "title",
+      "position" : {
+        "bottom" : 53,
+        "top" : 38,
+        "left" : 5,
+        "right" : 45
+      },
+      "FontSetting":{
+        "textAlign": "center",
+        "fontSize": 63.92,
+        "fontWeight": "normal",
+        "fontStyle": "normal"
+      }
+    },
+    "slogan" : {
+      "type" : "slogan",
+      "position" : {
+        "bottom" : 65,
+        "top" : 55,
+        "left" : 5,
+        "right" : 45
+      },
+      "FontSetting":{
+        "textAlign": "center",
+        "fontSize": 63.92,
+        "fontWeight": "normal",
+        "fontStyle": "normal"
+      }
+    },
+    "type" : {
+      "type" : "dec",
+      "position" : {
+        "bottom" : 80,
+        "top" : 68,
+        "left" : 10,
+        "right" : 40
+      }
+    },
+    "logo" : {
+      "type" : "logo",
+      "position" : {
+        "bottom" : 35,
+        "top" : 25,
+        "left" : 15,
+        "right" : 35
+      }
+    }
+  },
+  {
+    "txt" : {
+      "type" : "txt",
+      "position" : {
+        "bottom" : 95,
+        "top" : 85,
+        "left" : 15,
+        "right" : 48
+      },
+      "FontSetting":{
+        "textAlign": "right",
+        "fontWeight": "normal",
+        "fontStyle": "normal"
+      }
+    },
+    "pic" : {
+      "type" : "pic",
+      "position" : {
+        "bottom" : 95,
+        "top" : 5,
+        "left" : 50,
+        "right" : 95
+      }
+    },
+    "title" : {
+      "type" : "title",
+      "position" : {
+        "bottom" : 70,
+        "top" : 50,
+        "left" : 5,
+        "right" : 48
+      },
+      "FontSetting":{
+        "textAlign": "right",
+        "fontSize": 63.92,
+        "fontWeight": "normal",
+        "fontStyle": "normal"
+      }
+    },
+    "slogan" : {
+      "type" : "slogan",
+      "position" : {
+        "bottom" : 81,
+        "top" : 70,
+        "left" : 5,
+        "right" : 48
+      },
+      "FontSetting":{
+        "textAlign": "right",
+        "fontSize": 63.92,
+        "fontWeight": "normal",
+        "fontStyle": "normal"
+      }
+    },
+    "dec" : {
+      "type" : "dec",
+      "position" : {
+        "bottom" : 80,
+        "top" : 68,
+        "left" : 10,
+        "right" : 40
+      }
+    },
+    "logo" : {
+      "type" : "logo",
+      "position" : {
+        "bottom" : 12,
+        "top" : 5,
+        "left" : 5,
+        "right" : 14
       }
     }
   }

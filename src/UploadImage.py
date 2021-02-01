@@ -33,7 +33,7 @@ def http_put(values):
     payload = json.dumps(values).encode('UTF-8')
 
     headers = {
-        'authentication': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0NzA3NiwidHlwZSI6InVzZXIiLCJpc19hZG1pbiI6MCwiaWF0IjoxNjExNTM5MDMyLCJleHAiOjE2MTIxNDM4MzJ9.JDO7ZUSBwLhi19icpcJzNTJbjqfNULkclq5zKTrFrOY',
+        'authentication': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0NzA3NiwidHlwZSI6InVzZXIiLCJpc19hZG1pbiI6MCwiaWF0IjoxNjExODI3NTk3LCJleHAiOjE2MTI0MzIzOTd9.Reb2G_WoODIrkZpxlE51g9kcrj5Dp5ctu6oZml2mPrU',
         'Content-Type': 'application/json'
     }
 

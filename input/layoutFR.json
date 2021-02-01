@@ -1,0 +1,75 @@
+[
+  {
+    "txt" : {
+      "type" : "txt",
+      "position" : {
+        "bottom" : 85,
+        "top" : 60,
+        "left" : 5,
+        "right" : 95
+      },
+      "FontSetting":{
+        "textAlign": "left",
+        "fontWeight": "normal",
+        "fontStyle": "normal"
+      }
+    },
+    "pic" : {
+      "type" : "pic",
+      "position" : {
+        "bottom" : 100,
+        "top" : 0,
+        "left" : 0,
+        "right" : 50
+      }
+    },
+    "title" : {
+      "type" : "title",
+      "position" : {
+        "bottom" : 95,
+        "top" : 86,
+        "left" : 5,
+        "right" : 95
+      },
+      "FontSetting":{
+        "textAlign": "left",
+        "fontSize": 63.92,
+        "fontWeight": "normal",
+        "fontStyle": "normal"
+      }
+    },
+    "slogan" : {
+      "type" : "slogan",
+      "position" : {
+        "bottom" : 70,
+        "top" : 50,
+        "left" : 55,
+        "right" : 95
+      },
+      "FontSetting":{
+        "textAlign": "left",
+        "fontSize": 63.92,
+        "fontWeight": "normal",
+        "fontStyle": "normal"
+      }
+    },
+    "dec" : {
+      "type" : "dec",
+      "position" : {
+        "bottom" : 80,
+        "top" : 60,
+        "left" : 55,
+        "right" : 95
+      }
+    },
+    "logo" : {
+      "type" : "logo",
+      "position" : {
+        "bottom" : 95,
+        "top" : 86,
+        "left" : 5,
+        "right" : 95
+      }
+    }
+  }
+]
