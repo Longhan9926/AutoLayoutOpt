@@ -434,8 +434,8 @@
     "txt" : {
       "type" : "txt",
       "position" : {
-        "bottom" : 70,
-        "top" : 56,
+        "bottom" : 80,
+        "top" : 60,
         "left" :50 ,
         "right" : 98
       },

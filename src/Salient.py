@@ -201,8 +201,8 @@ def crop_salient(image, target_size):
     if mode == 1:
         return crop_n_scale(mask.shape, target_size)
     else:
-        return crop_n_scale(mask.shape, target_size)
-        #return direct_scale(mask.shape, target_size, image)
+        # return crop_n_scale(mask.shape, target_size)
+        return direct_scale(mask.shape, target_size, image)
 
 
 if __name__ == '__main__':
