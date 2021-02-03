@@ -1,8 +1,10 @@
 import math
 import cv2
+import os
 import json
 import numpy as np
 import imageio
+import random
 from .LoadImage import url_to_image, url_to_svg
 from .RandomG import random_name
 from .Salient import crop_salient
@@ -13,7 +15,8 @@ len_px = 3.7795275591
 len_pt = 0.3528
 open_file = open("input/basic_material.json")
 urls = json.load(open_file)
-
+mask_path = "input/mask"
+mask_files = os.listdir(mask_path)
 
 class ComponentLayer:
     def __init__(self, dec_type=None, prime_hue=None):
@@ -91,11 +94,19 @@ class Picture(ComponentLayer):
         update layer src
         """
         origin = url_to_image(self.url)
-        # origin = skimage.img_as_float(origin)
-        # origin = np.uint8(origin)
         image = crop_salient(origin, size)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        imageio.imwrite('cropped.png', image)
+        cv2.imwrite('image.png', image)
+        maskornot = np.random.choice([0,1])
+        if maskornot == 1:
+            # mask_pattern = random.choice(urls)
+            # mask = url_to_image(mask_pattern)
+            file = random.sample(mask_files, 1)
+            mask = mask_path + '/' + file[0]
+            print(mask)
+            mask = cv2.imread(mask, cv2.IMREAD_UNCHANGED)
+            mask = cv2.resize(mask, (image.shape[1], image.shape[0]))
+            image[:, :, 3] = np.where(mask[:, :, 3] > 0.5, 255, 0)
+        cv2.imwrite('cropped.png', image)
         self.layer["src"] = upload_image('cropped.png')
 
 
@@ -107,7 +118,7 @@ class Decoration(ComponentLayer):
         self.layer["fills"] = [{"color": "rgba(0, 0, 0, 1)", "type": "globalFill"}]
 
     def set_color(self, color):
-        color = [round(x*255) for x in color]
+        color = [round(x * 255) for x in color]
         if len(color) == 3:
             a = 1
         else:
@@ -122,7 +133,7 @@ class Title(ComponentLayer):
         super().__init__()
         if font_setting is None:
             font_setting = {"fontWeight": "normal", "fontStyle": "normal",
-                            "color": "#FFFFFFFF", "fontSize":60, "color_f": None}
+                            "color": "#FFFFFFFF", "fontSize": 60, "color_f": None}
         self.layer["value"] = text
         self.type = 'title'
         self.layer["type"] = "font"
@@ -137,12 +148,12 @@ class Title(ComponentLayer):
 
     def cal_text_size(self):
         length = len(self.layer["value"])
-        if length > self.style["width"]/self.style["height"]:
+        if length > self.style["width"] / self.style["height"]:
             self.style["lineHeight"] = self.style["height"]
             self.style["fontSize"] = self.style["width"] / length
-        elif length < self.style["width"]/self.style["height"]:
-            self.style["lineHeight"] = self.style["height"]*0.8
-            self.style["fontSize"] = self.style["height"]*0.8
+        elif length < self.style["width"] / self.style["height"]:
+            self.style["lineHeight"] = self.style["height"] * 0.8
+            self.style["fontSize"] = self.style["height"] * 0.8
 
     def set_font(self, font_set):
         for key, item in font_set.items():
@@ -189,7 +200,7 @@ class Slogan(ComponentLayer):
 
     def cal_text_size(self):
         length = len(self.layer["value"])
-        self.style["fontSize"] = math.floor(math.sqrt(self.style["height"] * self.style["width"]/length/2))
+        self.style["fontSize"] = math.sqrt(self.style["height"] * self.style["width"] / length / 1.7)
         self.style["lineHeight"] = self.style["fontSize"] * 1.1
 
     def set_font(self, font_set):
@@ -238,14 +249,14 @@ class Text(ComponentLayer):
 
     def cal_text_size(self):
         length = len(self.layer["value"])
-        self.style["fontSize"] = math.floor(math.sqrt(self.style["height"] * self.style["width"] / length / 2))
+        self.style["fontSize"] = max(math.sqrt(self.style["height"] * self.style["width"] / length / 1.5), 6 * len_pt)
         str = self.layer["value"]
         str = str.split('\n')
         n = math.floor(self.style["width"] / self.style["fontSize"])
         n_r = 0
         n_l = [len(s) for s in str]
         for s in str:
-            n_r = n_r + len(s)//n + 1
+            n_r = n_r + len(s) // n + 1
         self.style["top"] = self.style["top"] + self.style["height"] - n_r * self.style["lineHeight"]
         self.style["lineHeight"] = self.style["fontSize"] * 1.1
 
@@ -287,4 +298,4 @@ class Logo(ComponentLayer):
         else:
             self.layer["src"] = "//cdn.baoxiaohe.com/73328f73-91d8-4470-bac7-e69ca56eaa1c.svg"
         image = url_to_svg(self.layer["src"])
-        self.shape_origin = image.shape[1]/image.shape[0]
+        self.shape_origin = image.shape[1] / image.shape[0]

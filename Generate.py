@@ -115,7 +115,23 @@ class Design:
                     layer.style["height"] = height
                 else:
                     layer.style["height"] = height
-            if layer.type in ["title", "slogan", "txt"]:
+            if layer.type in ["title", "slogan", "txt", "text"]:
+                layer.set_font(layout[layer.type].font_set)
+                layer.cal_text_size()
+
+    def load_layout_n(self, layout, safe_distance, face_size, face_loc):
+        for layer in self.design_str:
+            layout[layer.type].define_size(face_size, face_loc, safe_distance)
+            for key in ["top", "left", "width", "height"]:
+                layer.style[key] = layout[layer.type].position["absolute"][key]
+            if layer.type == 'logo':
+                height = layer.style["width"] / layer.shape_origin
+                if layer.style["top"] / face_size[1] > 0.5:
+                    layer.style["top"] = layer.style["top"] - height + layer.style["height"]
+                    layer.style["height"] = height
+                else:
+                    layer.style["height"] = height
+            if layer.type in ["title", "slogan", "txt", "text"]:
                 layer.set_font(layout[layer.type].font_set)
                 layer.cal_text_size()
 

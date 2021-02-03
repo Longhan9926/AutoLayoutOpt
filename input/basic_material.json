@@ -1,8 +1,11 @@
-{
-  "rectangle": ["//cdn.baoxiaohe.com/4b157157-4aeb-4227-aa7d-cd49049e8fc8.svg"],
-  "circle": ["//cdn.baoxiaohe.com/44855f93-f0d0-46a2-9f98-2925b4ab9d5c.svg"],
-  "triangle": ["//cdn.baoxiaohe.com/iconmonstr-test/2012/svg/iconmonstr-triangle-1.svg"],
-  "brush": [
-    "//cdn.baoxiaohe.com/9e6b62c0-ae3b-4420-958d-125ed7aa86bb.svg"
-  ]
-}
+[
+  "//cdn.baoxiaohe.com/4b157157-4aeb-4227-aa7d-cd49049e8fc8.svg",
+  "//cdn.baoxiaohe.com/37251f5b-0012-467c-96c4-fbe8fda190b9.svg",
+  "//cdn.baoxiaohe.com/acf059c7-af9b-447b-92d0-7026d3789c2a.svg",
+  "//cdn.baoxiaohe.com/ded3e4b8-205e-4fbd-a7f1-faa78d8afde0.svg",
+  "//cdn.baoxiaohe.com/44855f93-f0d0-46a2-9f98-2925b4ab9d5c.svg",
+  "//cdn.baoxiaohe.com/9e6b62c0-ae3b-4420-958d-125ed7aa86bb.svg",
+  "//cdn.baoxiaohe.com/5c67dab7-de5f-49ab-b93f-53c105092364.svg",
+  "//cdn.baoxiaohe.com/iconmonstr-test/2012/svg/iconmonstr-badge-6.svg",
+  "//cdn.baoxiaohe.com/8bbb5027-e518-4727-ba66-d4036ce3a02b.svg"
+]

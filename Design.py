@@ -65,12 +65,12 @@ class Box:
         # face = Generate.Design(face_size, face_loc)
         # face.design_str = copy.deepcopy(self.faces[old].design_str)
         self.faces[new] = copy.deepcopy(self.faces[old])
-        self.locate_face(new)
-
-    def locate_face(self, key = "H"):
-        face_size = src.get_face_size(self.face_data[key])
-        face_loc = src.get_face_loc(self.face_data[key])
-        self.faces[key].load_layout_b(self.layout[key], self.safe, face_size, face_loc)
+        face_size_new = src.get_face_size(self.face_data[new])
+        face_loc_new = src.get_face_loc(self.face_data[new])
+        face_size_old = src.get_face_size(self.face_data[old])
+        face_loc_old = src.get_face_loc(self.face_data[old])
+        self.faces[new].load_layout_n(self.layout[new], self.safe, face_size_new, face_loc_new)
+        self.faces[old].load_layout_n(self.layout[old], self.safe, face_size_old, face_loc_old)
 
     def save_box(self):
         temp = []
@@ -100,9 +100,9 @@ if __name__ == '__main__':
     title = '你好'
     slogan = '很高兴能认识你很高兴能认识你'
     text1 = '我可以咬你一口吗我可以咬你一口吗我可以咬你一口吗我可以咬你一口吗'
-    text2 = "产品名称：红酒开酒器\n外箱尺寸：424×204×258mm\n规         格：10个\/箱\n企业代码：313454654645\n执行标准：564654515645\n生  产  商：杭州片段网络科技有限公司\n地         址：杭州市西湖区西湖国际大厦B2座\n客服电话：0571-87150783\n官         网： www.baoxiaohe.com\n"
+    text2 = "产品名称：红酒开酒器\n外箱尺寸：424×204×258mm\n规         格：10个/箱\n企业代码：313454654645\n执行标准：564654515645\n生  产  商：杭州片段网络科技有限公司\n地         址：杭州市西湖区西湖国际大厦B2座\n客服电话：0571-87150783\n官         网： www.baoxiaohe.com\n"
     logo = None
-    n_palette = 2
+    n_palette = 3
 
     dominant_color = src.get_dominant_color(prime)
     dominant_color = (dominant_color[0] / 255, dominant_color[1] / 255, dominant_color[2] / 255)
@@ -120,12 +120,16 @@ if __name__ == '__main__':
                                                              ele["position"]["left"], ele["position"]["right"])
                 if ele["type"] in ["title", "slogan", "txt"]:
                     face_layout[ele["type"]].font_setting(ele["FontSetting"])
+                    if ele["type"] in ["title", "slogan"]:
+                        choice = np.random.choice(["bold", "normal"])
+                        face_layout[ele["type"]].font_set["fontWeight"] = choice
             box_layout[face_name] = face_layout
         except FileNotFoundError:
             pass
-    #box_layout["H"] = box_layout["F"]
+    box_layout["H"] = box_layout["F"]
+    box_layout["FR"] = box_layout["FL"]
 
-    safe_distance = 5
+    safe_distance = 3
     new_box = Box(face_data, dominant_color, box_layout, n_palette, safe_distance)
 
     F_inputs = {}

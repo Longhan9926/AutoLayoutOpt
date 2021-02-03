@@ -40,6 +40,12 @@ def label_salient_region(image):
     return mask
 
 
+def label_salient_region_cv(image):
+    saliencyAlgorithm = cv2.saliency.StaticSaliencyFineGrained_create()
+    success, saliencyMap = saliencyAlgorithm.computeSaliency(image)
+    return saliencyMap
+
+
 # def crop_salient(image, target_size):
 #     """
 #     :param file_path:
@@ -143,8 +149,8 @@ def crop_salient(image, target_size):
     :param target_size: [width, height]
     :return:
     """
-    mask = label_salient_region(image)
-    mask = np.where(mask > 0.5, 1, 0)
+    mask = label_salient_region_cv(image)
+    # mask = np.where(mask > 0.5, 1, 0)
     m, n = mask.shape
     mask_sum = np.zeros((m + 1, n + 1))
     for i in range(1, m + 1):
@@ -176,7 +182,32 @@ def crop_salient(image, target_size):
             image_cropped = image[left:left + target_size[1],:]
             return image_cropped
 
-    return crop_n_scale(mask.shape, target_size)
+    def direct_scale(origin_size, target_size, image):
+        if image.shape[-1] == 3:
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2RGBA)
+            image[:, :, 3] = 255
+        origin_size = [origin_size[1], origin_size[0]]
+        if origin_size[0] * target_size[1] - origin_size[1] * target_size[0] < 0:
+            target_size[0] = (target_size[0] * origin_size[1]) // target_size[1]
+            target_size[1] = origin_size[1]
+            lim = - origin_size[0] + target_size[0]
+            canva = np.ones((target_size[1], target_size[0], 4))*255
+            canva[:,lim // 2:lim // 2 + origin_size[0]] = image
+            return canva
+        else:
+            target_size[1] = (target_size[1] * origin_size[0]) // target_size[0]
+            target_size[0] = origin_size[0]
+            lim = - origin_size[1] + target_size[1]
+            canva = np.ones((target_size[1], target_size[0], 4))*255
+            canva[lim//2:lim//2 + origin_size[1],:] = image
+            return canva
+
+    mode = np.random.choice((1,0))
+    if mode == 1:
+        return crop_n_scale(mask.shape, target_size)
+    else:
+        # return crop_n_scale(mask.shape, target_size)
+        return direct_scale(mask.shape, target_size, image)
 
 
 if __name__ == '__main__':

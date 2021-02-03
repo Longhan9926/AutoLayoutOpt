@@ -20,8 +20,9 @@ def url_to_image(url):
             image = np.asarray(bytearray(resp.read()), dtype="uint8")
             image = cv2.imdecode(image, cv2.IMREAD_UNCHANGED)
             # cv2.imwrite(output_path + url[-20:], image)
-    if image.shape[2] == 4:
-        image = cv2.cvtColor(image, cv2.COLOR_RGBA2RGB)
+    if image.shape[-1] == 3:
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2RGBA)
+        image[:, :, 3] = 255
     return image
 
 
