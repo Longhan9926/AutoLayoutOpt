@@ -1,12 +1,7 @@
-import numpy as np
 import cv2
-import math
-import tensorflow as tf
 import imageio
-import sko
-from sko.GA import GA
-from sko.SA import SA
-from sko.PSO import PSO
+import numpy as np
+import tensorflow as tf
 
 g_mean = np.array(([126.88, 120.24, 112.19])).reshape([1, 1, 3])
 salience_bar = 0.7
@@ -206,8 +201,8 @@ def crop_salient(image, target_size):
     if mode == 1:
         return crop_n_scale(mask.shape, target_size)
     else:
-        # return crop_n_scale(mask.shape, target_size)
-        return direct_scale(mask.shape, target_size, image)
+        return crop_n_scale(mask.shape, target_size)
+        #return direct_scale(mask.shape, target_size, image)
 
 
 if __name__ == '__main__':

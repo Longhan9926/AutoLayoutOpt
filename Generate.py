@@ -1,11 +1,12 @@
-from typing import List
-import src
-import sys
-import math
-import numpy as np
-import cv2
-import json
 import argparse
+import colorsys
+import json
+import math
+from typing import List
+
+import numpy as np
+
+import src
 
 len_px = 3.7795275591
 open_file = open("input/basic_material.json")
@@ -138,13 +139,14 @@ class Design:
     def implement_palette(self, color_palette):
         self.color_palette = color_palette
         for layer in self.design_str:
-            if layer.type not in ["dec", "title"]:
+            if layer.type not in ["dec", "title", "slogan"]:
                 continue
             elif layer.hue:
                 layer.set_color(layer.hue)
             else:
                 choice = np.random.choice(range(len(color_palette)))
-                layer.set_color(color_palette[choice])
+                temp = color_palette[choice]
+                layer.set_color(colorsys.hsv_to_rgb(temp[0],temp[1]**1.5,temp[2]**1.5))
 
     def save_design(self):
         temp = []

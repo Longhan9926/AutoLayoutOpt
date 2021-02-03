@@ -1,7 +1,8 @@
-import numpy as np
-import cv2
+from urllib.request import urlopen
+
 import cairosvg
-from urllib.request import urlretrieve, urlopen
+import cv2
+import numpy as np
 
 output_path = 'output/'
 

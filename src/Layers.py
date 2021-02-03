@@ -1,15 +1,15 @@
-import math
-import cv2
-import os
 import json
-import numpy as np
-import imageio
+import math
+import os
 import random
+
+import cv2
+import numpy as np
+
 from .LoadImage import url_to_image, url_to_svg
 from .RandomG import random_name
 from .Salient import crop_salient
 from .UploadImage import upload_image
-import skimage
 
 len_px = 3.7795275591
 len_pt = 0.3528
@@ -17,6 +17,7 @@ open_file = open("input/basic_material.json")
 urls = json.load(open_file)
 mask_path = "input/mask"
 mask_files = os.listdir(mask_path)
+mask_files.remove('.DS_Store')
 
 class ComponentLayer:
     def __init__(self, dec_type=None, prime_hue=None):
@@ -100,9 +101,8 @@ class Picture(ComponentLayer):
         if maskornot == 1:
             # mask_pattern = random.choice(urls)
             # mask = url_to_image(mask_pattern)
-            file = random.sample(mask_files, 1)
+            file = random.sample(list(mask_files),1)
             mask = mask_path + '/' + file[0]
-            print(mask)
             mask = cv2.imread(mask, cv2.IMREAD_UNCHANGED)
             mask = cv2.resize(mask, (image.shape[1], image.shape[0]))
             image[:, :, 3] = np.where(mask[:, :, 3] > 0.5, 255, 0)
@@ -150,10 +150,10 @@ class Title(ComponentLayer):
         length = len(self.layer["value"])
         if length > self.style["width"] / self.style["height"]:
             self.style["lineHeight"] = self.style["height"]
-            self.style["fontSize"] = self.style["width"] / length
+            self.style["fontSize"] = self.style["width"] / (length+0.5)
         elif length < self.style["width"] / self.style["height"]:
-            self.style["lineHeight"] = self.style["height"] * 0.8
-            self.style["fontSize"] = self.style["height"] * 0.8
+            self.style["lineHeight"] = self.style["height"] * 0.9
+            self.style["fontSize"] = self.style["height"] * 0.9
 
     def set_font(self, font_set):
         for key, item in font_set.items():
@@ -200,7 +200,7 @@ class Slogan(ComponentLayer):
 
     def cal_text_size(self):
         length = len(self.layer["value"])
-        self.style["fontSize"] = math.sqrt(self.style["height"] * self.style["width"] / length / 1.7)
+        self.style["fontSize"] = math.sqrt(self.style["height"] * self.style["width"] / length / 1.8)
         self.style["lineHeight"] = self.style["fontSize"] * 1.1
 
     def set_font(self, font_set):
@@ -249,7 +249,7 @@ class Text(ComponentLayer):
 
     def cal_text_size(self):
         length = len(self.layer["value"])
-        self.style["fontSize"] = max(math.sqrt(self.style["height"] * self.style["width"] / length / 1.5), 6 * len_pt)
+        self.style["fontSize"] = max(math.sqrt(self.style["height"] * self.style["width"] / length / 1.7), 6 * len_pt)
         str = self.layer["value"]
         str = str.split('\n')
         n = math.floor(self.style["width"] / self.style["fontSize"])
