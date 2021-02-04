@@ -4,7 +4,7 @@ import json
 
 def http_get_size(url):
     headers = {
-        'authentication': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0NzA3NiwidHlwZSI6InVzZXIiLCJpc19hZG1pbiI6MCwiaWF0IjoxNjExODI3NTk3LCJleHAiOjE2MTI0MzIzOTd9.Reb2G_WoODIrkZpxlE51g9kcrj5Dp5ctu6oZml2mPrU'
+        'authentication': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0NzA3NiwidHlwZSI6InVzZXIiLCJpc19hZG1pbiI6MCwiaWF0IjoxNjEyNDMzODM5LCJleHAiOjE2MTMwMzg2Mzl9.z771tEQldsFI0yNvqwuzuUoqS-jFu56PiTUahSSBM14'
     }
     response = requests.request("GET", url, headers=headers)
     jdata = json.loads(response.text)

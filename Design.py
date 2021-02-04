@@ -155,7 +155,7 @@ class Box:
 
 
 if __name__ == '__main__':
-    id = 217642 # 200227  # 215561
+    id = 215561 # 200227  # 215561
     url = "https://www.baoxiaohe.com/api/bs/box/project/knifes?bleed=3&dpi=3.7795275591&id=" + str(id)
     face_data = src.http_get_size(url)
     prime = 'input/img'

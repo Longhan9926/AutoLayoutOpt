@@ -203,7 +203,7 @@ class Slogan(ComponentLayer):
 
     def cal_text_size(self):
         length = len(self.layer["value"])
-        self.style["fontSize"] = math.sqrt(self.style["height"] * self.style["width"] / length / 1.8)
+        self.style["fontSize"] = math.sqrt(self.style["height"] * self.style["width"] / length / 1.7)
         self.style["lineHeight"] = self.style["fontSize"] * 1.1
 
     def set_font(self, font_set):
@@ -252,7 +252,7 @@ class Text(ComponentLayer):
 
     def cal_text_size(self):
         length = len(self.layer["value"])
-        self.style["fontSize"] = max(math.sqrt(self.style["height"] * self.style["width"] / length / 2), 6 * len_pt)
+        self.style["fontSize"] = max(math.sqrt(self.style["height"] * self.style["width"] / length / 1.7), 6 * len_pt)
         str = self.layer["value"]
         str = str.split('\n')
         n = math.floor(self.style["width"] / self.style["fontSize"])
