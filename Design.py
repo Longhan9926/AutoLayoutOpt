@@ -29,7 +29,8 @@ def determine_layout():
         try:
             with open('input/layout' + face_name + '.json', 'r') as load_f:
                 layouts = json.load(load_f)
-            temp = np.random.choice(layouts)
+            # temp = np.random.choice(layouts)
+            temp = layouts[-1]
             face_layout = {}
             for key, ele in temp.items():
                 face_layout[ele["type"]] = Generate.Location(ele["position"]["top"], ele["position"]["bottom"], \
@@ -102,12 +103,13 @@ class Box:
         index = random.randint(2, n_palette)
         bkg_palette = self.color_palette[str(index)]
         bkg_color = random.choice(bkg_palette)
-        bkg_color = colorsys.hsv_to_rgb(bkg_color[0], bkg_color[1]**1.5, bkg_color[2]**1.5)
+        bkg_color = colorsys.hsv_to_rgb(bkg_color[0], bkg_color[1] ** 1.5, bkg_color[2] ** 1.5)
         with open('upload_raw.json', 'w') as f:
-            choice = np.random.choice([1,0,2,3])
+            choice = np.random.choice([1, 0, 2, 3])
             if choice == 1:
-                collection["background"] = "rgba({0},{1},{2},{3})".format(str(bkg_color[0]*255), str(bkg_color[1]*255),
-                                                                      str(bkg_color[2]*255), str(150))
+                collection["background"] = "rgba({0},{1},{2},{3})".format(str(bkg_color[0] * 255),
+                                                                          str(bkg_color[1] * 255),
+                                                                          str(bkg_color[2] * 255), str(150))
                 faces_color = {}
                 for key in ["F", "H"]:
                     faces_color[key] = {}
@@ -117,11 +119,13 @@ class Box:
                 faces_color = {}
                 for key in ["FR", "FL"]:
                     faces_color[key] = {}
-                    faces_color[key]["rgba"] = "rgba({0},{1},{2},{3})".format(str(bkg_color[0]*255), str(bkg_color[1]*255),
-                                                                      str(bkg_color[2]*255), str(150))
+                    faces_color[key]["rgba"] = "rgba({0},{1},{2},{3})".format(str(bkg_color[0] * 255),
+                                                                              str(bkg_color[1] * 255),
+                                                                              str(bkg_color[2] * 255), str(150))
             elif choice == 3:
-                collection["background"] = "rgba({0},{1},{2},{3})".format(str(bkg_color[0]*255), str(bkg_color[1]*255),
-                                                                      str(bkg_color[2]*255), str(150))
+                collection["background"] = "rgba({0},{1},{2},{3})".format(str(bkg_color[0] * 255),
+                                                                          str(bkg_color[1] * 255),
+                                                                          str(bkg_color[2] * 255), str(150))
                 faces_color = {}
                 for key in ["F", "H", "FR", "FL"]:
                     faces_color[key] = {}
@@ -140,7 +144,7 @@ class Box:
         with open('box.json', 'w', encoding='utf-8') as f:
             f.write(json.dumps(temp))
 
-    def upload_box(self,id):
+    def upload_box(self, id):
         with open('box.json', 'r') as load_f:
             box = json.load(load_f)
         with open('upload_raw.json', 'r') as f:
@@ -151,15 +155,15 @@ class Box:
 
 
 if __name__ == '__main__':
-    id = 200227#215561
-    url = "https://www.baoxiaohe.com/api/bs/box/project/knifes?bleed=3&dpi=3.7795275591&id="+str(id)
+    id = 217642 # 200227  # 215561
+    url = "https://www.baoxiaohe.com/api/bs/box/project/knifes?bleed=3&dpi=3.7795275591&id=" + str(id)
     face_data = src.http_get_size(url)
     prime = 'input/img'
     files = os.listdir(prime)
     files.remove('.DS_Store')
     file = random.sample(files, 1)
-    #prime = prime + '/images (2).jpeg'# + file[0]
-    prime = prime + '/' + file[0]
+    prime = prime + '/下载.jpeg'
+    # prime = prime + '/' + file[0]
     prime_url = src.upload_image(prime)
 
     title_file = json.load(open("input/title.json"))

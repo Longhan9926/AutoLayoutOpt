@@ -500,7 +500,7 @@
         "bottom" : 20,
         "top" : 5,
         "left" : 50,
-        "right" : 98
+        "right" : 78
       }
     }
   },
@@ -508,8 +508,8 @@
     "txt" : {
       "type" : "txt",
       "position" : {
-        "bottom" : 70,
-        "top" : 56,
+        "bottom" : 90,
+        "top" : 72,
         "left" :50 ,
         "right" : 98
       },
@@ -532,8 +532,8 @@
     "title" : {
       "type" : "title",
       "position" : {
-        "bottom" : 40,
-        "top" : 21,
+        "bottom" : 55,
+        "top" : 35,
         "left" : 50,
         "right" : 98
       },
@@ -547,8 +547,8 @@
     "slogan" : {
       "type" : "slogan",
       "position" : {
-        "bottom" : 55,
-        "top" : 41,
+        "bottom" : 70,
+        "top" : 56,
         "left" : 50,
         "right" : 98
       },
@@ -571,10 +571,10 @@
     "logo" : {
       "type" : "logo",
       "position" : {
-        "bottom" : 20,
-        "top" : 2,
-        "left" : 50,
-        "right" : 98
+        "bottom" : 50,
+        "top" : 35,
+        "left" : 35,
+        "right" : 48
       }
     }
   }

@@ -14,6 +14,8 @@ def label_salient_region(image):
     :param image: image read by imageio, 4 channels
     :return: labelled mask of the salient region
     """
+    imageio.imwrite("temp.png", image)
+    image = cv2.imread("temp.png")
     image_size = image.shape
     mask = np.zeros(image_size[0:2])
 
@@ -31,13 +33,17 @@ def label_salient_region(image):
         feed_dict = {image_batch: image}
         pred_alpha = sess.run(pred_mattes, feed_dict=feed_dict)
         mask = cv2.resize(np.squeeze(pred_alpha), origin_shape)
-        # imageio.imwrite('alpha.png', mask)
+        imageio.imwrite('mask.png', mask)
     return mask
 
 
 def label_salient_region_cv(image):
-    saliencyAlgorithm = cv2.saliency.StaticSaliencyFineGrained_create()
+    imageio.imwrite("temp.png", image)
+    image = cv2.imread("temp.png")
+    # saliencyAlgorithm = cv2.saliency.StaticSaliencyFineGrained_create()
+    saliencyAlgorithm = cv2.saliency.StaticSaliencySpectralResidual_create()
     success, saliencyMap = saliencyAlgorithm.computeSaliency(image)
+    imageio.imwrite('mask.png',saliencyMap)
     return saliencyMap
 
 
@@ -145,6 +151,7 @@ def crop_salient(image, target_size):
     :return:
     """
     mask = label_salient_region_cv(image)
+    # mask = label_salient_region(image)
     # mask = np.where(mask > 0.5, 1, 0)
     m, n = mask.shape
     mask_sum = np.zeros((m + 1, n + 1))

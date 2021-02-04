@@ -161,7 +161,7 @@ def generate_color_palette(n_color, dominant_color):
 
 
 if __name__ == '__main__':
-    n = 3
+    n = 5
     dominant_color = get_dominant_color('../input/img/下载.jpeg')
     dominant_color = (dominant_color[0] / 255, dominant_color[1] / 255, dominant_color[2] / 255)
     palette = generate_color_palette(n, dominant_color)

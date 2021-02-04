@@ -109,6 +109,9 @@ class Picture(ComponentLayer):
         cv2.imwrite('cropped.png', image)
         self.layer["src"] = upload_image('cropped.png')
 
+    def __repr__(self):
+        raise NotImplementedError
+
 
 class Decoration(ComponentLayer):
     def __init__(self, pattern='rectangle'):
@@ -249,7 +252,7 @@ class Text(ComponentLayer):
 
     def cal_text_size(self):
         length = len(self.layer["value"])
-        self.style["fontSize"] = max(math.sqrt(self.style["height"] * self.style["width"] / length / 1.7), 6 * len_pt)
+        self.style["fontSize"] = max(math.sqrt(self.style["height"] * self.style["width"] / length / 2), 6 * len_pt)
         str = self.layer["value"]
         str = str.split('\n')
         n = math.floor(self.style["width"] / self.style["fontSize"])

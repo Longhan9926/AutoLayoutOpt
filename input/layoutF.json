@@ -103,7 +103,7 @@
         "bottom" : 25,
         "top" : 6,
         "left" : 5,
-        "right" : 45
+        "right" : 70
       },
       "FontSetting":{
         "textAlign": "left",
@@ -387,7 +387,7 @@
         "bottom" : 30,
         "top" : 6,
         "left" : 5,
-        "right" : 60
+        "right" : 80
       },
       "FontSetting":{
         "textAlign": "left",
@@ -434,8 +434,8 @@
     "txt" : {
       "type" : "txt",
       "position" : {
-        "bottom" : 70,
-        "top" : 56,
+        "bottom" : 80,
+        "top" : 60,
         "left" :50 ,
         "right" : 98
       },
@@ -498,9 +498,83 @@
       "type" : "logo",
       "position" : {
         "bottom" : 20,
-        "top" : 2,
+        "top" : 5,
         "left" : 50,
+        "right" : 78
+      }
+    }
+  },
+  {
+    "txt" : {
+      "type" : "txt",
+      "position" : {
+        "bottom" : 80,
+        "top" : 69,
+        "left" :40 ,
         "right" : 98
+      },
+      "FontSetting":{
+        "textAlign": "left",
+        "fontWeight": "normal",
+        "fontStyle": "normal"
+      }
+    },
+
+    "pic" : {
+      "type" : "pic",
+      "position" : {
+        "bottom" : 30,
+        "top" : 2,
+        "left" : 2,
+        "right" : 98
+      }
+    },
+    "title" : {
+      "type" : "title",
+      "position" : {
+        "bottom" : 55,
+        "top" : 35,
+        "left" : 40,
+        "right" : 98
+      },
+      "FontSetting":{
+        "textAlign": "left",
+        "fontSize": 63.92,
+        "fontWeight": "bold",
+        "fontStyle": "normal"
+      }
+    },
+    "slogan" : {
+      "type" : "slogan",
+      "position" : {
+        "bottom" : 67,
+        "top" : 56,
+        "left" : 40,
+        "right" : 98
+      },
+      "FontSetting":{
+        "textAlign": "left",
+        "fontSize": 63.92,
+        "fontWeight": "normal",
+        "fontStyle": "normal"
+      }
+    },
+    "type" : {
+      "type" : "dec",
+      "position" : {
+        "bottom" : 35,
+        "top" : 20,
+        "left" : 70,
+        "right" : 95
+      }
+    },
+    "logo" : {
+      "type" : "logo",
+      "position" : {
+        "bottom" : 50,
+        "top" : 35,
+        "left" : 10,
+        "right" : 38
       }
     }
   }
