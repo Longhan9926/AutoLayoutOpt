@@ -117,7 +117,7 @@ class Decoration(ComponentLayer):
     def __init__(self, pattern='rectangle'):
         super().__init__()
         self.type = 'dec'
-        self.layer["src"] = urls[pattern][0]
+        # self.layer["src"] = urls[pattern][0]
         self.layer["fills"] = [{"color": "rgba(0, 0, 0, 1)", "type": "globalFill"}]
 
     def set_color(self, color):

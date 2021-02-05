@@ -5,3 +5,4 @@ from .Plot import InitCanvas
 from .UploadImage import upload_image, http_put
 from .Salient import crop_salient
 from .GetSize import http_get_size, get_face_size, get_face_loc
+from .Background import generate_combine

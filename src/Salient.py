@@ -21,8 +21,10 @@ def label_salient_region(image):
 
     gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=1.0)
     with tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(gpu_options=gpu_options)) as sess:
-        saver = tf.compat.v1.train.import_meta_graph('/Users/macos/PycharmProjects/AutoLayoutOpt/src/salient/meta_graph/my-model.meta')
-        saver.restore(sess, tf.compat.v1.train.latest_checkpoint('/Users/macos/PycharmProjects/AutoLayoutOpt/src/salient/salience_model'))
+        saver = tf.compat.v1.train.import_meta_graph(
+            '/Users/macos/PycharmProjects/AutoLayoutOpt/src/salient/meta_graph/my-model.meta')
+        saver.restore(sess, tf.compat.v1.train.latest_checkpoint(
+            '/Users/macos/PycharmProjects/AutoLayoutOpt/src/salient/salience_model'))
         image_batch = tf.compat.v1.get_collection('image_batch')[0]
         pred_mattes = tf.compat.v1.get_collection('mask')[0]
 
@@ -43,7 +45,7 @@ def label_salient_region_cv(image):
     # saliencyAlgorithm = cv2.saliency.StaticSaliencyFineGrained_create()
     saliencyAlgorithm = cv2.saliency.StaticSaliencySpectralResidual_create()
     success, saliencyMap = saliencyAlgorithm.computeSaliency(image)
-    imageio.imwrite('mask.png',saliencyMap)
+    imageio.imwrite('mask.png', saliencyMap)
     return saliencyMap
 
 
@@ -167,21 +169,21 @@ def crop_salient(image, target_size):
         :return: image
         """
         origin_size = [origin_size[1], origin_size[0]]
-        if origin_size[0]*target_size[1] - origin_size[1]*target_size[0] > 0:
+        if origin_size[0] * target_size[1] - origin_size[1] * target_size[0] > 0:
             target_size[0] = (target_size[0] * origin_size[1]) // target_size[1]
             target_size[1] = origin_size[1]
             lim = origin_size[0] - target_size[0]
-            S = [mask_sum[-1,i+target_size[0]]-mask_sum[-1,i] for i in range(lim)]
+            S = [mask_sum[-1, i + target_size[0]] - mask_sum[-1, i] for i in range(lim)]
             left = np.argmax(S)
-            image_cropped = image[:,left:left+target_size[0]]
+            image_cropped = image[:, left:left + target_size[0]]
             return image_cropped
         else:
             target_size[1] = (target_size[1] * origin_size[0]) // target_size[0]
             target_size[0] = origin_size[0]
             lim = origin_size[1] - target_size[1]
-            S = [mask_sum[i + target_size[1],-1] - mask_sum[i,-1] for i in range(lim)]
+            S = [mask_sum[i + target_size[1], -1] - mask_sum[i, -1] for i in range(lim)]
             left = np.argmax(S)
-            image_cropped = image[left:left + target_size[1],:]
+            image_cropped = image[left:left + target_size[1], :]
             return image_cropped
 
     def direct_scale(origin_size, target_size, image):
@@ -193,18 +195,22 @@ def crop_salient(image, target_size):
             target_size[0] = (target_size[0] * origin_size[1]) // target_size[1]
             target_size[1] = origin_size[1]
             lim = - origin_size[0] + target_size[0]
-            canva = np.ones((target_size[1], target_size[0], 4))*255
-            canva[:,lim // 2:lim // 2 + origin_size[0]] = image
+            canva = np.ones((target_size[1], target_size[0], 4)) * 255
+            canva[:, lim // 2:lim // 2 + origin_size[0]] = image
+            canva[:, :, 3] = 1
+            canva[:, lim // 2:lim // 2 + origin_size[0], 3] = 255
             return canva
         else:
             target_size[1] = (target_size[1] * origin_size[0]) // target_size[0]
             target_size[0] = origin_size[0]
             lim = - origin_size[1] + target_size[1]
-            canva = np.ones((target_size[1], target_size[0], 4))*255
-            canva[lim//2:lim//2 + origin_size[1],:] = image
+            canva = np.ones((target_size[1], target_size[0], 4)) * 255
+            canva[lim // 2:lim // 2 + origin_size[1], :] = image
+            canva[:, :, 3] = 1
+            canva[lim // 2:lim // 2 + origin_size[1], 3] = 255
             return canva
 
-    mode = np.random.choice((1,0))
+    mode = np.random.choice((1, 0))
     if mode == 1:
         return crop_n_scale(mask.shape, target_size)
     else:

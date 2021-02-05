@@ -9,6 +9,7 @@ import operator
 from functools import reduce
 import colorsys
 import copy
+from PIL import Image
 
 random.seed(random.randint(0, 10000))
 faces_names = ["F", "H", "FR", "FL"]
@@ -29,8 +30,8 @@ def determine_layout():
         try:
             with open('input/layout' + face_name + '.json', 'r') as load_f:
                 layouts = json.load(load_f)
-            # temp = np.random.choice(layouts)
-            temp = layouts[-1]
+            temp = np.random.choice(layouts)
+            # temp = layouts[-1]
             face_layout = {}
             for key, ele in temp.items():
                 face_layout[ele["type"]] = Generate.Location(ele["position"]["top"], ele["position"]["bottom"], \
@@ -77,7 +78,7 @@ class Box:
             rank = element_types.index(ele_type)
             temp_layer = eval(layer_types[rank] + "(input)")
             layers[rank].append(temp_layer)
-        layers = reduce(operator.add, layers)
+        layers = [i for item in layers for i in item]
         for layer in layers:
             face.insert_layer(layer)
         face.load_layout_b(self.layout[key], self.safe, face_size, face_loc)
@@ -93,8 +94,30 @@ class Box:
         self.faces[new].load_layout_n(self.layout[new], self.safe, face_size_new, face_loc_new)
         self.faces[old].load_layout_n(self.layout[old], self.safe, face_size_old, face_loc_old)
 
-    def set_face_color(self, palette):
-        raise NotImplementedError
+    def set_bkg(self, palette, key = "F"):
+        face_size = src.get_face_size(self.face_data[key])
+        face_loc_F = src.get_face_loc(self.face_data["F"])
+        face_loc_H = src.get_face_loc(self.face_data["H"])
+        size = self.faces[key].size
+        size = [size[0]*3,size[1]*3]
+        lt = np.random.gamma(size[1] * 0.05)
+        rt = np.random.gamma(size[1] * 0.05)
+        lb = np.random.gamma(size[1] * 0.95)
+        rb = np.random.gamma(size[1] * 0.95)
+        im = Image.new('RGBA', tuple(size), (0, 0, 0, 0))
+        im = src.generate_combine(im, palette, size, (0, lb), (size[0], rb), n_control=4, n_layer=1)
+        im = src.generate_combine(im, palette, size, (0, lt), (size[0], rt), is_down=False, n_control=4, n_layer=1)
+        im.save('bkg.png')
+        bkg = src.Decoration()
+        bkg.layer["src"] = src.upload_image('bkg.png')
+        bkg.style["left"], bkg.style["top"] = face_loc_F
+        bkg.style["width"], bkg.style["height"] = face_size
+        self.faces["F"].design_str.insert(0, bkg)
+        bkg = src.Decoration()
+        bkg.layer["src"] = src.upload_image('bkg.png')
+        bkg.style["left"], bkg.style["top"] = face_loc_H
+        bkg.style["width"], bkg.style["height"] = face_size
+        self.faces["H"].design_str.insert(1, bkg)
 
     def implement_color_palette(self):
         with open('upload_raw.json', 'r') as f:
@@ -102,10 +125,12 @@ class Box:
         # prime_palette = self.color_palette["1"]
         index = random.randint(2, n_palette)
         bkg_palette = self.color_palette[str(index)]
-        bkg_color = random.choice(bkg_palette)
+        bkg_color = random.choice(bkg_palette[2:])
+        ind = bkg_palette.index(bkg_color)
         bkg_color = colorsys.hsv_to_rgb(bkg_color[0], bkg_color[1] ** 1.5, bkg_color[2] ** 1.5)
         with open('upload_raw.json', 'w') as f:
             choice = np.random.choice([1, 0, 2, 3])
+            choice = 1
             if choice == 1:
                 collection["background"] = "rgba({0},{1},{2},{3})".format(str(bkg_color[0] * 255),
                                                                           str(bkg_color[1] * 255),
@@ -114,6 +139,7 @@ class Box:
                 for key in ["F", "H"]:
                     faces_color[key] = {}
                     faces_color[key]["rgba"] = "rgba(255,255,255,255)"
+                self.set_bkg(bkg_palette[:ind+1])
             elif choice == 2:
                 collection["background"] = "rgba(255,255,255,255)"
                 faces_color = {}
